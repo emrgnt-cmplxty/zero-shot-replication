@@ -1,47 +1,18 @@
 import argparse
 import logging
 import os
-from time import sleep
 import re
 
-import pandas as pd
 from evalplus.data import write_jsonl
-from leetcode_env.environment import LeetCodeEnv
-from leetcode_env.leetcode_types import LeetCodeSubmission, ProgrammingLanguage
-from pandas.core.array_algos.take import take_1d
 
 from zero_shot_replication.helpers.base import OUTPUT_FILE_NAME
 from zero_shot_replication.helpers.utils import (
     get_configured_logger,
     get_root_dir,
-    load_file_or_raise,
     parse_arguments,
     prep_for_file_path,
     load_existing_jsonl
 )
-
-def read_existing_results(out_path: str) -> list[dict]:
-    """Reads existing results from out_path if it exists, otherwise returns empty list"""
-    return (
-        load_file_or_raise(out_path).to_dict(orient="records")
-        if os.path.exists(out_path)
-        else []
-    )
-
-
-def _create_submission_result(
-    solution: dict, extracted_code: str, status: str, reward: bool, done: str
-) -> dict:
-    return {
-        "task_id": solution["task_id"],
-        "status": status,
-        "reward": int(reward),
-        "done": done,
-        "raw_completion": solution["raw_completion"],
-        "extracted_code": extracted_code,
-        "difficulty": solution["difficulty"],
-    }
-
 
 def process_solution(
     solution: dict,
