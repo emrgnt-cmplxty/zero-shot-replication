@@ -13,6 +13,7 @@ from zero_shot_replication.helpers.utils import (
     prep_for_file_path,
     load_existing_jsonl
 )
+from zero_shot_replication.helpers.math_equivalence import is_equiv
 
 def process_solution(
     solution: dict,
@@ -28,13 +29,14 @@ def process_solution(
     else:
         logger.warn(f"Cannot find canonical answer for task_id: {task_id}.")
         return 0
-    box_match = re.search(r'\\boxed{(\d+(\.\d+)?)\}', completion)
+    box_match = re.findall(r'\\boxed{(\d+(\.\d+)?)\}', completion)
     if box_match:
-        model_answer = box_match.group(1)
+        # get the last boxed
+        model_answer = box_match[-1][0]
     else:
         logger.warn(f"Cannot find model answer for task_id: {task_id}.")
         return 0
-    return int(canonical_answer == model_answer) 
+    return int(is_equiv(canonical_answer, model_answer))
 
 
 def get_input_path(args: argparse.Namespace) -> str:
