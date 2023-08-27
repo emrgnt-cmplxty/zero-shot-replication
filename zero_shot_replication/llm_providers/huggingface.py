@@ -2,7 +2,7 @@ import logging
 import os
 
 import torch
-from transformers import LlamaForCausalLM, LlamaTokenizer
+from transformers import GenerationConfig, LlamaForCausalLM, LlamaTokenizer
 
 from zero_shot_replication.llm_providers.base import LLMProvider
 
@@ -15,6 +15,8 @@ class LocalLLamaModel:
     # TODO - Make these upstream configurations
     MAX_OUTPUT_LENGTH = 2048
     TOP_K = 40
+    TOP_P = 0.9
+    NUM_BEAMS = 1
 
     def __init__(
         self,
@@ -32,8 +34,8 @@ class LocalLLamaModel:
         )
         self.tokenizer = LlamaTokenizer.from_pretrained(
             model,
-            device_map="auto",
             torch_dtype=torch.float16,
+            device_map="auto",
             use_auth_token=self.hf_access_token,
         )
 
@@ -46,18 +48,27 @@ class LocalLLamaModel:
         self.temperature = temperature
 
     def get_completion(self, prompt: str, *args, **kwargs) -> str:
-        inputs = self.tokenizer(prompt, return_tensors="pt").to("cuda")
+        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
 
         # TODO - Move to HF Configuration approach
+
+        generation_config = GenerationConfig(
+            temperature=self.temperature,
+            top_p=LocalLLamaModel.TOP_P,
+            top_k=LocalLLamaModel.TOP_K,
+            num_beams=LocalLLamaModel.NUM_BEAMS,
+            eos_token_id=self.tokenizer.eos_token_id,
+            pad_token_id=self.tokenizer.pad_token_id,
+            do_sample=True,
+        )
+
         output = self.model.generate(
             inputs["input_ids"],
-            temperature=self.temperature,
-            top_k=LocalLLamaModel.TOP_K,
-            do_sample=True,
+            generation_config=generation_config,
             max_new_tokens=self.max_output_length,
         )
 
-        output = output[0].to("cpu")
+        output = output[0].to(self.device)
         return self.tokenizer.decode(output)
 
 
