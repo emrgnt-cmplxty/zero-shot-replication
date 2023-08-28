@@ -1,6 +1,7 @@
 from zero_shot_replication.model.base import LargeLanguageModel, ModelName
 from zero_shot_replication.model.hugging_face_model.hf_llama import (
     HuggingFaceLlamaModel,
+    PromptMode,
 )
 
 
@@ -26,6 +27,13 @@ class HuggingFaceModel(LargeLanguageModel):
             raise ValueError(
                 "Stream is not supported for HuggingFace in this framework."
             )
+        super().__init__(
+            model_name,
+            temperature,
+            stream,
+            prompt_mode=PromptMode.HUMAN_FEEDBACK,
+        )
+
         if model_name in HuggingFaceModel.META_MODELS:
             raise NotImplementedError("Meta models are not supported yet.")
         else:
