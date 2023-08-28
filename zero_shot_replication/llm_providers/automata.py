@@ -79,7 +79,7 @@ class AutomataZeroShotProvider(LLMProvider):
             stream=stream,
             verbose=True,
             tools=PyInterpreterOpenAIToolkitBuilder().build_for_open_ai(),
-            system_instruction=None,
+            system_instruction=self.ADVANCED_SYSTEM_PROMPT,  # Set system_instruction to ADVANCED_SYSTEM_PROMPT
             model=model,
             temperature=temperature
         )
@@ -89,4 +89,8 @@ class AutomataZeroShotProvider(LLMProvider):
         full_prompt = prompt
         logger.info(f"Getting completion from Automata for model={self.model}")
         agent = OpenAIAutomataAgent(full_prompt, self.agent_config)
+        
+        # Execute the agent to get the completion
         return agent.run()
+        
+

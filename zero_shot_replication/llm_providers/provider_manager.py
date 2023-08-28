@@ -48,6 +48,8 @@ class ProviderManager:
         ProviderConfig(
             "automata",
             [
+                "gpt-3.5-turbo-0301",
+                "gpt-3.5-turbo",
                 "gpt-4-0314",
             ],
             AutomataZeroShotProvider,
