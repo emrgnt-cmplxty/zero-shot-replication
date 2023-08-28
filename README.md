@@ -11,6 +11,7 @@ The Zero-Shot Replication Framework is a minimal environment designed to replica
 | *Standard Bench*     |                    |                    |          |            |            |                  |                |          |
 | HumanEval            | 67.0               | 61.5               | 65.2     | 86.0       | 84.1       | 70.7             | 67.0           | [1]      |
 | HumanEval+           | 59.1               | 54.2               | 54.9     | 80.5       | 74.4       | 60.3             | N/A            |          |
+| MATH                 | 35.4               | 37.2               | 17.6     | 51.6       | 50.3       | N/A              | 42.2           | [3]      |
 | **LeetCodeSparks**   |                    |                    |          |            |            |                  |                | [1,2]    |
 | Easy                 | 60.0               | 76.2               | 52.4     | 76.2       | 61.2       | 38.1             | 68.2-75.6      | [1,2]*   |
 | Medium               | 15.0               | 22.0               | 9.8      | 19.5       | 31.7       | 12.2             | 26.7-40.0      | [1,2]*   |
@@ -24,7 +25,6 @@ The Zero-Shot Replication Framework is a minimal environment designed to replica
 
 'LeetCode_100' is an expected out-of-sample dataset we introduce of 100 recent easy, medium, and hard LeetCode problems. The problems live in the range 2554-2818.
 
-<!-- | MATH                 | 35.4               | 37.2               | 17.6     | 51.6       | 50.3       | N/A              | 42.2           | [3]      | -->
 <!-- | GSM8K | 71.1 | 67.6 | Pend. | 90.4 | 91.0 | | 87.1 | [2] | -->
 
 ## Features
@@ -50,8 +50,8 @@ The Zero-Shot Replication Framework is a minimal environment designed to replica
 - python-dotenv: ^1.0.0
 - python-leetcode: "1.2.1"
 
-# HF Dependencies
-
+## Extra Dependencies
+- automata
 - transformers: "^4.32.0"
 - torch: "1.13.1"
 - accelerate: "^0.22.0"
@@ -77,7 +77,7 @@ Make sure you have [Poetry](https://python-poetry.org/) installed, then clone th
 git clone https://github.com/your-username/zero-shot-replication.git
 cd zero-shot-replication
 git submodule update --init --recursive
-poetry install
+poetry install # to install automata, poetry install -E automata
 cp .env.example .env # Copy the example environment file
 # Edit the .env file to add your OpenAI API key, etc.
 
@@ -85,7 +85,10 @@ cp .env.example .env # Copy the example environment file
 # Optional
 
 # If developing, install the pre-commit hooks
-pre-commit install 
+# pre-commit install 
+
+# If using automata, install the repo
+# git submodule add -f https://github.com/emrgnt-cmplxty/zero-shot-replication.git zero_shot_replication/automata
 
 ```
 
