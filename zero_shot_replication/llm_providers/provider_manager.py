@@ -20,6 +20,11 @@ from zero_shot_replication.model import ModelName
 
 
 class ProviderManager:
+    AUTOMATA_MODELS = [
+        model for model in MODEL_SETS[ProviderName.OPENAI]
+        if model not in [ModelName.GPT_3p5_TURBO_0301, ModelName.GPT_3p5_TURBO_0613]
+    ]
+
     PROVIDERS = [
         ProviderConfig(
             ProviderName.OPENAI,
@@ -38,7 +43,7 @@ class ProviderManager:
         ),
         ProviderConfig(
             ProviderName.AUTOMATA,
-            MODEL_SETS[ProviderName.OPENAI],
+            AUTOMATA_MODELS,
             AutomataZeroShotProvider,
         ),
     ]

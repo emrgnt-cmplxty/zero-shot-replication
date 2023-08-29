@@ -80,9 +80,10 @@ class AutomataZeroShotProvider(LargeLanguageModelProvider):
             ) from e
 
         from automata.config import OpenAIAutomataAgentConfig
-        from automata.tools.builders import (  # WolframAlphaOpenAIToolkitBuilder,
-            PyInterpreterOpenAIToolkitBuilder,
-        )
+        # Not accessed and not in file?
+        # from automata.tools.builders import (  # WolframAlphaOpenAIToolkitBuilder,
+        #     PyInterpreterOpenAIToolkitBuilder,
+        # )
 
         self.agent_config = OpenAIAutomataAgentConfig(
             model=model_name.value,
