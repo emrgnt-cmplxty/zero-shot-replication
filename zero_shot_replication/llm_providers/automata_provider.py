@@ -2,7 +2,7 @@ import logging
 import textwrap
 
 from zero_shot_replication.llm_providers.base import LargeLanguageModelProvider
-from zero_shot_replication.model import ModelName, OpenAIModel
+from zero_shot_replication.model import ModelName, OpenAIModel, Quantization
 
 logger = logging.getLogger(__name__)
 
@@ -69,9 +69,14 @@ class AutomataZeroShotProvider(LargeLanguageModelProvider):
     def __init__(
         self,
         model_name: ModelName = ModelName.GPT_4,
+        quantization: Quantization = Quantization.proprietary,
         temperature: float = 0.7,
         stream: bool = True,
     ) -> None:
+        if quantization != Quantization.proprietary:
+            raise ValueError(
+                "Only proprietary quantization is supported by Automata."
+            )
         try:
             import automata  # noqa: F401
         except ImportError as e:
@@ -94,7 +99,9 @@ class AutomataZeroShotProvider(LargeLanguageModelProvider):
             tools=[],
             system_instruction=AutomataZeroShotProvider.ADVANCED_SYSTEM_PROMPT,
         )
-        self._model = OpenAIModel(model_name, temperature, stream)
+        self._model = OpenAIModel(
+            model_name, quantization, temperature, stream
+        )
 
     def get_completion(self, prompt: str) -> str:
         """Get a completion from Automata based on the provided prompt."""

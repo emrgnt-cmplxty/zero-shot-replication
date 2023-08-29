@@ -61,6 +61,24 @@ def parse_arguments() -> argparse.Namespace:
         help="Which provider to use for zero-shot completions?",
     )
     parser.add_argument(
+        "--model",
+        type=str,
+        default="gpt-3.5-turbo",
+        help="Model name to load from the provider.",
+    )
+    parser.add_argument(
+        "--quantization",
+        type=str,
+        default="proprietary",
+        help="What quantization to run the model with?",
+    )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.7,
+        help="Temperature parameter for provided model.",
+    )
+    parser.add_argument(
         "--stream",
         type=bool,
         default=False,
@@ -71,18 +89,6 @@ def parse_arguments() -> argparse.Namespace:
         type=str,
         default="human-eval",
         help="Which pset to run on?",
-    )
-    parser.add_argument(
-        "--model",
-        type=str,
-        default="gpt-3.5-turbo",
-        help="Model name to load from the provider.",
-    )
-    parser.add_argument(
-        "--temperature",
-        type=float,
-        default=0.7,
-        help="Temperature parameter for provided model.",
     )
     parser.add_argument(
         "--output_file_name",

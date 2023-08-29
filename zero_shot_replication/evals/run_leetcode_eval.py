@@ -124,6 +124,9 @@ def process_solutions(
 
     for loc in range(len(solutions)):
         try:
+            parsed = parse_results(new_results, args.pset)
+            display_parsed_results(parsed)
+
             solution = solutions.iloc[loc]
             extracted_code = extract_code(solution.raw_completion)
 
@@ -170,15 +173,12 @@ def process_solutions(
 def parse_results(results: list[dict], pset: str) -> dict:
     parsed_results: dict = {"easy": [], "medium": [], "hard": []}
 
-    # if pset == "leetcode":
     difficulty_map = {1: "easy", 2: "medium", 3: "hard"}
 
     for result in results:
         difficulty_key = difficulty_map.get(result["difficulty"])
         if difficulty_key:
             parsed_results[difficulty_key].append(result["reward"])
-    # else:
-    #     sparks_agi_problem_list =
 
     return parsed_results
 

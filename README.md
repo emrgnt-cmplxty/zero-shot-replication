@@ -6,20 +6,39 @@ The Zero-Shot Replication Framework is a minimal environment designed to replica
 
 ## Results (all models accessed on 08/24-8/25, 2023)
 
-| Category             | gpt-3.5-turbo-0301 | gpt-3.5-turbo-0613 | claude-2 | gpt-4-0314 | gpt-4-0613 | wizard-coder-34b | gpt-4 Baseline | Sources  |
-|----------------------|--------------------|--------------------|----------|------------|------------|------------------|----------------|----------|
-| *Standard Bench*     |                    |                    |          |            |            |                  |                |          |
-| HumanEval            | 67.0               | 61.5               | 65.2     | 86.0       | 84.1       | 70.7             | 67.0           | [1]      |
-| HumanEval+           | 59.1               | 54.2               | 54.9     | 80.5       | 74.4       | 60.3             | N/A            |          |
-| MATH                 | 35.4               | 37.2               | 17.6     | 51.6       | 50.3       | N/A              | 42.2           | [3]      |
-| **LeetCodeSparks**   |                    |                    |          |            |            |                  |                | [1,2]    |
-| Easy                 | 60.0               | 76.2               | 52.4     | 76.2       | 61.2       | 38.1             | 68.2-75.6      | [1,2]*   |
-| Medium               | 15.0               | 22.0               | 9.8      | 19.5       | 31.7       | 12.2             | 26.7-40.0      | [1,2]*   |
-| Hard                 | 0.0                | 0.0                | 0.0      | 4.6        | 13.6       | 0.0              | 6.6-10.7       | [1,2]*   |
-| **LeetCode100**      |                    |                    |          |            |            |                  |                |          |
-| Easy                 | 83.0               | 80.0               | 73.0     | 91.0       | 88.0       | 71.0             | N/A            |          |
-| Medium               | 16.0               | 16.0               | 16.0     | 26.0       | 21.0       | 9.0              | N/A            |          |
-| Hard                 | 1.0                | 3.0                | 2.0      | 6.0        | 6.0        | 2.0              | N/A            |          |
+### Proprietary Models
+
+| Category             | gpt-3.5-turbo-0301 | gpt-3.5-turbo-0613 | claude-2 | gpt-4-0314 | gpt-4-0613 | gpt-4 Baseline | Sources  |
+|----------------------|--------------------|--------------------|----------|------------|------------|----------------|----------|
+| *Standard Bench*     |                    |                    |          |            |            |                |          |
+| HumanEval            | 67.0               | 61.5               | 65.2     | 86.0       | 84.1       | 67.0           | [1]      |
+| HumanEval+           | 59.1               | 54.2               | 54.9     | 80.5       | 74.4       | N/A            |          |
+| MATH                 | 35.4               | 37.2               | 17.6     | 51.6       | 50.3       | 42.2           | [3]      |
+| **LeetCodeSparks**   |                    |                    |          |            |            |                | [1,2]    |
+| Easy                 | 60.0               | 76.2               | 52.4     | 76.2       | 61.2       | 68.2-75.6      | [1,2]*   |
+| Medium               | 15.0               | 22.0               | 9.8      | 19.5       | 31.7       | 26.7-40.0      | [1,2]*   |
+| Hard                 | 0.0                | 0.0                | 0.0      | 4.6        | 13.6       | 6.6-10.7       | [1,2]*   |
+| **LeetCode100**      |                    |                    |          |            |            |                |          |
+| Easy                 | 83.0               | 80.0               | 73.0     | 91.0       | 88.0       | N/A            |          |
+| Medium               | 16.0               | 16.0               | 16.0     | 26.0       | 21.0       | N/A            |          |
+| Hard                 | 1.0                | 3.0                | 2.0      | 6.0        | 6.0        | N/A            |          |
+
+### OpenSource Models (vs latest GPT-4)
+
+| Category             | wizard-coder-34b | phind-v2  | gpt-4-0613|
+|----------------------|------------------|-----------|------------|
+| *Standard Bench*     |                  |       |            |
+| HumanEval            | 70.7             | 73.1  | 84.1       |
+| HumanEval+           | 60.3             | 65.9  | 74.4       |
+| MATH                 | N/A              | N/A   | 50.3       |
+| **LeetCodeSparks**   |                  |       |            |
+| Easy                 | 38.1             | 47.6  | 61.2       |
+| Medium               | 12.2             | 7.3   | 31.7       |
+| Hard                 | 0.0              | 0.0   | 13.6       |
+| **LeetCode100**      |                  |       |            |
+| Easy                 | 71.0             | 59.0  | 88.0       |
+| Medium               | 9.0              | 4.0   | 21.0       |
+| Hard                 | 2.0              | 3.0   | 6.0        |
 
 **The gpt-4 LeetCodeSparks baseline is approximate, as we do not see a precise list of LeetCode problems listed in the referenced reports. We define 'LeetCodeSparks' as the 84 problems used for the human evaluation measurement mentioned in [2]*
 

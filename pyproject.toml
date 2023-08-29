@@ -22,6 +22,9 @@ python-leetcode = "1.2.1"
 astunparse = "1.6.3"
 anthropic = "^0.3.10"
 numpy = "^1.25.2"
+# uncomment if running transformers off main
+# recommended for Phind and WizardCoder
+# transformers = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
 transformers = "^4.32.0"
 torch = "2.0.1"
 accelerate = "^0.22.0"
@@ -29,8 +32,7 @@ sentencepiece = "^0.1.99"
 protobuf = "~4.23.4"
 # uncomment if running automata
 # automata = { git = "https://github.com/emrgnt-cmplxty/automata.git", branch = "feature/automata-slim" }
-# uncomment if running transformers off main
-# transformers = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
+
 
 [tool.poetry.group.dev.dependencies]
 sourcery = "^1.6.0"

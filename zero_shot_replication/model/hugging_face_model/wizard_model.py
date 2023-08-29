@@ -8,6 +8,7 @@ from zero_shot_replication.model.base import (
     LargeLanguageModel,
     ModelName,
     PromptMode,
+    Quantization,
 )
 
 logger = logging.getLogger(__name__)
@@ -25,6 +26,7 @@ class HuggingFaceWizardModel(LargeLanguageModel):
     def __init__(
         self,
         model_name: ModelName,
+        quantization: Quantization,
         temperature: float,
         stream: bool,
         max_new_tokens=None,
@@ -34,6 +36,7 @@ class HuggingFaceWizardModel(LargeLanguageModel):
 
         super().__init__(
             model_name,
+            quantization,
             temperature,
             stream,
             prompt_mode=PromptMode.HUMAN_FEEDBACK,
@@ -43,16 +46,22 @@ class HuggingFaceWizardModel(LargeLanguageModel):
         )
         self.hf_access_token = os.getenv("HF_TOKEN", "")
 
+        # TODO - Add support for 4-bit
+
         self.tokenizer = LlamaTokenizer.from_pretrained(
             model_name.value,
-            torch_dtype=torch.float16,
+            torch_dtype=torch.float16
+            if quantization == Quantization.float16
+            else torch.bfloat16,
             device_map="auto",
             use_auth_token=self.hf_access_token,
         )
 
         self.model = LlamaForCausalLM.from_pretrained(
             model_name.value,
-            torch_dtype=torch.float16,
+            torch_dtype=torch.float16
+            if quantization == Quantization.float16
+            else torch.bfloat16,
             device_map="auto",
             use_auth_token=self.hf_access_token,
         )

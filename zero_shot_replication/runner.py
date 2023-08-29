@@ -16,7 +16,7 @@ from zero_shot_replication.core.utils import (
 )
 from zero_shot_replication.datasets import get_dataset
 from zero_shot_replication.llm_providers import ProviderManager, ProviderName
-from zero_shot_replication.model import ModelName
+from zero_shot_replication.model import ModelName, Quantization
 
 
 def get_output_path(args: argparse.Namespace) -> str:
@@ -41,6 +41,7 @@ def get_output_path(args: argparse.Namespace) -> str:
             pset=prep_for_file_path(args.pset),
             MODEL=prep_for_file_path(args.model),
             TEMPERATURE=prep_for_file_path(str(args.temperature)),
+            QUANTIZATION=prep_for_file_path(str(args.quantization)),
         ),
     )
 
@@ -54,6 +55,7 @@ if __name__ == "__main__":
 
     provider = ProviderName(args.provider)
     model = ModelName(args.model)
+    quantization = Quantization(args.quantization)
 
     logger.info(
         f"Loading ModelName={model.value} from ProviderName={provider.value}."
@@ -61,7 +63,11 @@ if __name__ == "__main__":
 
     # Build an LLM provider instance
     llm_provider = ProviderManager.get_provider(
-        provider, model, temperature=args.temperature, stream=args.stream
+        provider,
+        model,
+        quantization,
+        temperature=args.temperature,
+        stream=args.stream,
     )
     # What mode should the prompt be in?
     prompt_mode = llm_provider.model.prompt_mode
@@ -80,20 +86,18 @@ if __name__ == "__main__":
 
     # Run the experiment
     for task_id, problem in dataset.generator:
+        if task_id in exising_task_ids:
+            print(
+                f"Continuing over existing task_id: {task_id} as it already exists."
+            )
+            continue
+
+        prompt = llm_provider.model.get_formatted_prompt(problem, dataset)
+
+        print(f"\n{'-'*200}\nTaskId:\n{task_id}\nPrompt:\n{prompt}\n")
         try:
-            if task_id in exising_task_ids:
-                print(
-                    f"Continuing over existing task_id: {task_id} as it already exists."
-                )
-                continue
-
-            prompt = llm_provider.model.get_formatted_prompt(problem, dataset)
-
-            print(f"\n{'-'*200}\nTaskId:\n{task_id}\nPrompt:\n{prompt}\n")
-
-            # try:
             raw_completion = llm_provider.get_completion(prompt)
-            if args.pset in ["human-eval", "leetcode"]:
+            if args.pset in ["human-eval", "leetcode", "leetcode-msft-sparks"]:
                 # or other codegen
                 completion = extract_code(raw_completion)
             else:

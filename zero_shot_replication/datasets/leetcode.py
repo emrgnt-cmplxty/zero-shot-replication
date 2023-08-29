@@ -33,11 +33,13 @@ class LeetCodeDataset(BaseDataset):
     {CODE_SNIPPET}
     ```
 
-    ### Notes: 
     Respond with the entire complete function definition, including a re-stated function definition.
     Use only built-in libraries and numpy, assume no additional imports other than those provided in the problem statement.
     Do not add any comments, be as concise in your code as possible.
     This is a competitive coding problem, pursue the most efficient algorithm possible.
+
+    ### Response:
+
     """
     )
 

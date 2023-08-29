@@ -7,6 +7,7 @@ from zero_shot_replication.model.base import (
     LargeLanguageModel,
     ModelName,
     PromptMode,
+    Quantization,
 )
 
 logger = logging.getLogger(__name__)
@@ -25,6 +26,7 @@ class HuggingFacePhindModel(LargeLanguageModel):
     def __init__(
         self,
         model_name: ModelName,
+        quantization: Quantization,
         temperature: float,
         stream: bool,
     ) -> None:
@@ -33,15 +35,24 @@ class HuggingFacePhindModel(LargeLanguageModel):
 
         super().__init__(
             model_name,
+            quantization,
             temperature,
             stream,
             prompt_mode=PromptMode.HUMAN_FEEDBACK,
         )
+        # TODO - Add support for 4-bit
         self.model = LlamaForCausalLM.from_pretrained(
-            model_name.value, device_map="auto", torch_dtype=torch.bfloat16
+            model_name.value,
+            device_map="auto",
+            torch_dtype=torch.float16
+            if quantization == Quantization.float16
+            else torch.bfloat16,
         )
         self.tokenizer = AutoTokenizer.from_pretrained(
-            model_name.value, torch_dtype=torch.bfloat16
+            model_name.value,
+            torch_dtype=torch.float16
+            if quantization == Quantization.float16
+            else torch.bfloat16,
         )
 
     def get_completion(self, prompt: str) -> str:
