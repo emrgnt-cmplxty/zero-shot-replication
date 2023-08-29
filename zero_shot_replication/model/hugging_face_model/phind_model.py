@@ -17,10 +17,10 @@ class HuggingFacePhindModel(LargeLanguageModel):
 
     # TODO - Make these upstream configurations
     MAX_TOTAL_TOKENS = 4_096
-    MAX_NEW_TOKENS = 1_024
+    MAX_NEW_TOKENS = 384
     TOP_K = 40
     TOP_P = 0.75
-    NUM_BEAMS = 1
+    DO_SAMPLE = True
 
     def __init__(
         self,
@@ -38,9 +38,11 @@ class HuggingFacePhindModel(LargeLanguageModel):
             prompt_mode=PromptMode.HUMAN_FEEDBACK,
         )
         self.model = LlamaForCausalLM.from_pretrained(
-            model_name.value, device_map="auto"
+            model_name.value, device_map="auto", torch_dtype=torch.bfloat16
         )
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name.value)
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_name.value, torch_dtype=torch.bfloat16
+        )
 
     def get_completion(self, prompt: str) -> str:
         """Generate the completion from the Phind model."""
@@ -55,13 +57,12 @@ class HuggingFacePhindModel(LargeLanguageModel):
 
         # Generate
         generate_ids = self.model.generate(
-            inputs.input_ids.to("cuda"),
+            inputs["input_ids"],
             max_new_tokens=HuggingFacePhindModel.MAX_NEW_TOKENS,
-            do_sample=True,
+            do_sample=HuggingFacePhindModel.DO_SAMPLE,
             top_p=HuggingFacePhindModel.TOP_P,
             top_k=HuggingFacePhindModel.TOP_K,
             temperature=self.temperature,
-            num_beams=HuggingFacePhindModel.NUM_BEAMS,
         )
         completion = self.tokenizer.batch_decode(
             generate_ids,

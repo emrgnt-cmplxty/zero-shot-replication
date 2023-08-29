@@ -17,7 +17,7 @@ class HuggingFaceWizardModel(LargeLanguageModel):
     """A class to provide zero-shot completions from a local Llama model."""
 
     # TODO - Make these upstream configurations
-    MAX_NEW_TOKENS = 1_024
+    MAX_NEW_TOKENS = 384
     TOP_K = 40
     TOP_P = 0.9
     NUM_BEAMS = 1
@@ -75,7 +75,6 @@ class HuggingFaceWizardModel(LargeLanguageModel):
         output = self.model.generate(
             inputs["input_ids"],
             generation_config=generation_config,
-            do_sample=True,
             max_new_tokens=self.max_new_tokens,
         )
 
