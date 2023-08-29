@@ -48,7 +48,10 @@ class HuggingFaceModel(LargeLanguageModel):
                 temperature,
                 stream,
             )
-        elif model_name == ModelName.PHIND_LM_PYTHON_34B:
+        elif (
+            model_name == ModelName.PHIND_LM_PYTHON_34B
+            or model_name == ModelName.PHIND_LM_PYTHON_34B_V2
+        ):
             self.model = HuggingFacePhindModel(
                 model_name,
                 temperature,

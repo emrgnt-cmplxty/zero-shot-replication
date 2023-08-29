@@ -16,9 +16,11 @@ class HuggingFacePhindModel(LargeLanguageModel):
     """A class to provide zero-shot completions from a local Llama model."""
 
     # TODO - Make these upstream configurations
+    MAX_TOTAL_TOKENS = 4_096
     MAX_NEW_TOKENS = 1_024
     TOP_K = 40
     TOP_P = 0.75
+    NUM_BEAMS = 1
 
     def __init__(
         self,
@@ -45,8 +47,11 @@ class HuggingFacePhindModel(LargeLanguageModel):
 
         self.tokenizer.pad_token = self.tokenizer.eos_token
         inputs = self.tokenizer(
-            prompt, return_tensors="pt", truncation=True, max_length=4096
-        )
+            prompt,
+            return_tensors="pt",
+            truncation=True,
+            max_length=HuggingFacePhindModel.MAX_TOTAL_TOKENS,
+        ).to(self.device)
 
         # Generate
         generate_ids = self.model.generate(
@@ -56,6 +61,7 @@ class HuggingFacePhindModel(LargeLanguageModel):
             top_p=HuggingFacePhindModel.TOP_P,
             top_k=HuggingFacePhindModel.TOP_K,
             temperature=self.temperature,
+            num_beams=HuggingFacePhindModel.NUM_BEAMS,
         )
         completion = self.tokenizer.batch_decode(
             generate_ids,
