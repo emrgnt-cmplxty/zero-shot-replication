@@ -71,8 +71,8 @@ The Zero-Shot Replication Framework is a minimal environment designed to replica
 
 ## Extra Dependencies
 - automata
-- transformers: "^4.32.0"
-- torch: "1.13.1"
+- transformers: "4.32.1"
+- torch: "2.0.1"
 - accelerate: "^0.22.0"
 - sentencepiece: "^0.1.99"
 - protobuf: "^4.24.1"

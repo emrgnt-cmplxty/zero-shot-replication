@@ -10,6 +10,7 @@ class Quantization(Enum):
     float16 = "float16"
     bfloat16 = "bfloat16"
     four_bit = "four-bit"
+    eight_bit = "eight-bit"
 
 
 class ModelName(Enum):

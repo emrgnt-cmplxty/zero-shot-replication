@@ -10,6 +10,7 @@ from zero_shot_replication.model.base import (
     PromptMode,
     Quantization,
 )
+from zero_shot_replication.core.utils import quantization_to_kwargs
 
 logger = logging.getLogger(__name__)
 
@@ -50,11 +51,9 @@ class HuggingFaceWizardModel(LargeLanguageModel):
 
         self.tokenizer = LlamaTokenizer.from_pretrained(
             model_name.value,
-            torch_dtype=torch.float16
-            if quantization == Quantization.float16
-            else torch.bfloat16,
             device_map="auto",
             use_auth_token=self.hf_access_token,
+            **quantization_to_kwargs(quantization),
         )
 
         self.model = LlamaForCausalLM.from_pretrained(

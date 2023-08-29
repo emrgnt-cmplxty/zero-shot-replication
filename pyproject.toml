@@ -11,7 +11,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.12"
+python = "3.11"
 black = "^23.3.0"
 openai = "0.27.8"
 python-dotenv = "^1.0.0"
@@ -25,7 +25,7 @@ numpy = "^1.25.2"
 # uncomment if running transformers off main
 # recommended for Phind and WizardCoder
 # transformers = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
-transformers = "^4.32.0"
+transformers = "4.32.1"
 torch = "2.0.1"
 accelerate = "^0.22.0"
 sentencepiece = "^0.1.99"
