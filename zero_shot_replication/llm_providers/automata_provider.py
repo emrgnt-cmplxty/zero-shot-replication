@@ -84,11 +84,14 @@ class AutomataZeroShotProvider(LargeLanguageModelProvider):
             PyInterpreterOpenAIToolkitBuilder,
         )
 
+        # TODO - Set upstream flags to allow downstream tools.
+        # PyInterpreterOpenAIToolkitBuilder().build_for_open_ai(),
+
         self.agent_config = OpenAIAutomataAgentConfig(
             model=model_name.value,
             temperature=temperature,
             stream=stream,
-            tools=[],  # PyInterpreterOpenAIToolkitBuilder().build_for_open_ai(),
+            tools=[],
             system_instruction=AutomataZeroShotProvider.ADVANCED_SYSTEM_PROMPT,
         )
         self._model = OpenAIModel(model_name, temperature, stream)
