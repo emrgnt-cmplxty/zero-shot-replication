@@ -1,5 +1,6 @@
 import logging
 import textwrap
+
 from zero_shot_replication.llm_providers.base import LLMProvider
 
 logger = logging.getLogger(__name__)
@@ -77,9 +78,7 @@ class AutomataZeroShotProvider(LLMProvider):
                 "Automata is not installed. To install, run `https://github.com/emrgnt-cmplxty/automata.git zero_shot_replication/automata`"
             ) from e
 
-        from zero_shot_replication.automata.agent import (
-            OpenAIAutomataAgent,
-        )
+        from zero_shot_replication.automata.agent import OpenAIAutomataAgent
         from zero_shot_replication.automata.config import (
             OpenAIAutomataAgentConfig,
         )

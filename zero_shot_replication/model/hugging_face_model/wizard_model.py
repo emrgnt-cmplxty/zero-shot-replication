@@ -17,7 +17,7 @@ class HuggingFaceWizardModel(LargeLanguageModel):
     """A class to provide zero-shot completions from a local Llama model."""
 
     # TODO - Make these upstream configurations
-    MAX_OUTPUT_LENGTH = 2048
+    MAX_NEW_TOKENS = 1_024
     TOP_K = 40
     TOP_P = 0.9
     NUM_BEAMS = 1
@@ -27,7 +27,7 @@ class HuggingFaceWizardModel(LargeLanguageModel):
         model_name: ModelName,
         temperature: float,
         stream: bool,
-        max_output_length=None,
+        max_new_tokens=None,
     ) -> None:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         logger.info(f"Selecting device = {self.device}")
@@ -38,8 +38,8 @@ class HuggingFaceWizardModel(LargeLanguageModel):
             stream,
             prompt_mode=PromptMode.HUMAN_FEEDBACK,
         )
-        self.max_output_length = (
-            max_output_length or HuggingFaceWizardModel.MAX_OUTPUT_LENGTH
+        self.max_new_tokens = (
+            max_new_tokens or HuggingFaceWizardModel.MAX_NEW_TOKENS
         )
         self.hf_access_token = os.getenv("HF_TOKEN", "")
 
@@ -76,7 +76,7 @@ class HuggingFaceWizardModel(LargeLanguageModel):
             inputs["input_ids"],
             generation_config=generation_config,
             do_sample=True,
-            max_new_tokens=self.max_output_length,
+            max_new_tokens=self.max_new_tokens,
         )
 
         output = output[0].to(self.device)

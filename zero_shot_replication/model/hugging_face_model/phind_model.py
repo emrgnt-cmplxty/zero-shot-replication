@@ -16,7 +16,7 @@ class HuggingFacePhindModel(LargeLanguageModel):
     """A class to provide zero-shot completions from a local Llama model."""
 
     # TODO - Make these upstream configurations
-    MAX_NEW_TOKENS = 256
+    MAX_NEW_TOKENS = 1_024
     TOP_K = 40
     TOP_P = 0.75
 
