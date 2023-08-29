@@ -147,6 +147,7 @@ def get_root_fpath() -> str:
 
 def quantization_to_kwargs(quantization: "Quantization") -> dict:
     """Convert a quantization to kwargs for the model."""
+    from zero_shot_replication.model import Quantization
 
     if quantization in [Quantization.float16, Quantization.bfloat16]:
         return {
