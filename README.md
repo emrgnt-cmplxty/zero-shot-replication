@@ -27,24 +27,22 @@ The Zero-Shot Replication Framework is a minimal environment designed to replica
 
 | Category             | wizard-coder-34b | phind-v2  | gpt-4-0613|
 |----------------------|------------------|-----------|------------|
-| *Standard Bench*     |                  |       |            |
-| HumanEval            | 70.7             | 73.1  | 84.1       |
-| HumanEval+           | 60.3             | 65.9  | 74.4       |
-| MATH                 | N/A              | N/A   | 50.3       |
-| **LeetCodeSparks**   |                  |       |            |
-| Easy                 | 38.1             | 47.6  | 61.2       |
-| Medium               | 12.2             | 7.3   | 31.7       |
-| Hard                 | 0.0              | 0.0   | 13.6       |
-| **LeetCode100**      |                  |       |            |
-| Easy                 | 71.0             | 59.0  | 88.0       |
-| Medium               | 9.0              | 4.0   | 21.0       |
-| Hard                 | 2.0              | 3.0   | 6.0        |
+| *Standard Bench*     |                  |           |            |
+| HumanEval            | 70.7             | 73.1      | 84.1       |
+| HumanEval+           | 60.3             | 65.9      | 74.4       |
+| MATH                 | N/A              | N/A       | 50.3       |
+| **LeetCodeSparks**   |                  |           |            |
+| Easy                 | 38.1             | 47.6      | 61.2       |
+| Medium               | 12.2             | 7.3       | 31.7       |
+| Hard                 | 0.0              | 0.0       | 13.6       |
+| **LeetCode100**      |                  |           |            |
+| Easy                 | 71.0             | 59.0      | 88.0       |
+| Medium               | 9.0              | 4.0       | 21.0       |
+| Hard                 | 2.0              | 3.0       | 6.0        |
 
 **The gpt-4 LeetCodeSparks baseline is approximate, as we do not see a precise list of LeetCode problems listed in the referenced reports. We define 'LeetCodeSparks' as the 84 problems used for the human evaluation measurement mentioned in [2]*
 
 'LeetCode_100' is an expected out-of-sample dataset we introduce of 100 recent easy, medium, and hard LeetCode problems. The problems live in the range 2554-2818.
-
-<!-- | GSM8K | 71.1 | 67.6 | Pend. | 90.4 | 91.0 | | 87.1 | [2] | -->
 
 ## Features
 
@@ -54,28 +52,30 @@ The Zero-Shot Replication Framework is a minimal environment designed to replica
 
 ## Requirements
 
-- Python >= 3.10 and < 3.12
+- Python >= 3.11 and < 3.12
 - Poetry for package management
 
 ## Min. Dependencies
 
-- anthropic: "0.3.10"
+- anthropic: "^0.3.10"
 - astunparse: "1.6.3"
-- black: ^23.3.0
-- evalplus: ^0.1.6
+- black: "^23.3.0"
+- evalplus: "^0.1.6"
 - numpy: "^1.25.2"
-- openai: 0.27.8
-- pandas: ^2.0.3
-- python-dotenv: ^1.0.0
+- openai: "0.27.8"
+- pandas: "^2.0.3"
+- python-dotenv: "^1.0.0"
 - python-leetcode: "1.2.1"
-
-## Extra Dependencies
-- automata
 - transformers: "4.32.1"
 - torch: "2.0.1"
 - accelerate: "^0.22.0"
 - sentencepiece: "^0.1.99"
-- protobuf: "^4.24.1"
+- protobuf: "~4.23.4"
+
+## Extra Dependencies
+
+- automata (from a specific branch: feature/automata-slim on GitHub, manual setup required)
+- transformers (optional from main branch of GitHub: https://github.com/huggingface/transformers.git, manual setup required)
 
 ## Dev Dependencies
 
@@ -100,15 +100,10 @@ poetry install # to install automata, poetry install -E automata
 cp .env.example .env # Copy the example environment file
 # Edit the .env file to add your OpenAI API key, etc.
 
-
 # Optional
 
 # If developing, install the pre-commit hooks
 # pre-commit install 
-
-# If using automata, install the repo
-# git submodule add -f https://github.com/emrgnt-cmplxty/zero-shot-replication.git zero_shot_replication/automata
-
 ```
 
 ## Usage

@@ -3,6 +3,7 @@ import logging
 import torch
 from transformers import AutoTokenizer, LlamaForCausalLM
 
+from zero_shot_replication.core.utils import quantization_to_kwargs
 from zero_shot_replication.model.base import (
     LargeLanguageModel,
     ModelName,
@@ -16,7 +17,7 @@ logger = logging.getLogger(__name__)
 class HuggingFacePhindModel(LargeLanguageModel):
     """A class to provide zero-shot completions from a local Llama model."""
 
-    # TODO - Make these upstream configurations
+    # TODO - Make these upstream configurations?
     MAX_TOTAL_TOKENS = 4_096
     MAX_NEW_TOKENS = 384
     TOP_K = 40
@@ -44,15 +45,12 @@ class HuggingFacePhindModel(LargeLanguageModel):
         self.model = LlamaForCausalLM.from_pretrained(
             model_name.value,
             device_map="auto",
-            torch_dtype=torch.float16
-            if quantization == Quantization.float16
-            else torch.bfloat16,
+            **quantization_to_kwargs(quantization),
         )
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name.value,
-            torch_dtype=torch.float16
-            if quantization == Quantization.float16
-            else torch.bfloat16,
+            device_map="auto",
+            **quantization_to_kwargs(quantization),
         )
 
     def get_completion(self, prompt: str) -> str:

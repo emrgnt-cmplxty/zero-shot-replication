@@ -1,10 +1,11 @@
-import torch
 import argparse
 import json
 import logging
 import os
 
 import pandas as pd
+import torch
+
 from zero_shot_replication.model import Quantization
 
 
@@ -143,10 +144,8 @@ def get_root_fpath() -> str:
 
 def quantization_to_kwargs(quantization: Quantization) -> dict:
     """Convert a quantization to kwargs for the model."""
-    if (
-        quantization == Quantization.float16
-        or quantization == Quantization.bfloat16
-    ):
+
+    if quantization in [Quantization.float16, Quantization.bfloat16]:
         return {
             "torch_dtype": torch.float16
             if quantization == Quantization.float16

@@ -4,13 +4,13 @@ import os
 import torch
 from transformers import GenerationConfig, LlamaForCausalLM, LlamaTokenizer
 
+from zero_shot_replication.core.utils import quantization_to_kwargs
 from zero_shot_replication.model.base import (
     LargeLanguageModel,
     ModelName,
     PromptMode,
     Quantization,
 )
-from zero_shot_replication.core.utils import quantization_to_kwargs
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class HuggingFaceWizardModel(LargeLanguageModel):
     """A class to provide zero-shot completions from a local Llama model."""
 
-    # TODO - Make these upstream configurations
+    # TODO - Make these upstream configurations?
     MAX_NEW_TOKENS = 384
     TOP_K = 40
     TOP_P = 0.9
@@ -58,11 +58,9 @@ class HuggingFaceWizardModel(LargeLanguageModel):
 
         self.model = LlamaForCausalLM.from_pretrained(
             model_name.value,
-            torch_dtype=torch.float16
-            if quantization == Quantization.float16
-            else torch.bfloat16,
             device_map="auto",
             use_auth_token=self.hf_access_token,
+            **quantization_to_kwargs(quantization),
         )
         self.temperature = temperature
 
