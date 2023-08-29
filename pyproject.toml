@@ -26,7 +26,7 @@ transformers = "4.32.1"
 # uncomment if running transformers off main brach of GitHub
 # *recommended for Phind and WizardCoder*
 # transformers = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
-torch = "2.0.1"
+torch = "2.0.0"
 accelerate = "^0.22.0"
 sentencepiece = "^0.1.99"
 protobuf = "~4.23.4"

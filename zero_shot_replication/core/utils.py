@@ -6,7 +6,10 @@ import os
 import pandas as pd
 import torch
 
-from zero_shot_replication.model import Quantization
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from zero_shot_replication.model import Quantization
 
 
 def load_file_or_raise(path: str):
@@ -142,7 +145,7 @@ def get_root_fpath() -> str:
     return os.path.dirname(os.path.abspath(__file__))
 
 
-def quantization_to_kwargs(quantization: Quantization) -> dict:
+def quantization_to_kwargs(quantization: "Quantization") -> dict:
     """Convert a quantization to kwargs for the model."""
 
     if quantization in [Quantization.float16, Quantization.bfloat16]:
