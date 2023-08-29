@@ -16,6 +16,7 @@ class ProblemType(Enum):
     LEETCODE_MSFT_SPARKS = "leetcode-msft-sparks"
     GSM8K = "gsm8k"
     MATH = "math"
+    MSFT_SPARKS_AGI = "msft-sparks-agi"
 
 
 class PromptMode(Enum):
