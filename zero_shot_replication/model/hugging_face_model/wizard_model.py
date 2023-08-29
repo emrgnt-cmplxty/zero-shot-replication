@@ -85,4 +85,7 @@ class HuggingFaceWizardModel(LargeLanguageModel):
         )
 
         output = output[0].to(self.device)
-        return self.tokenizer.decode(output)
+        completion = self.tokenizer.decode(output)
+        if prompt in completion:
+            completion = completion.split(prompt)[1]
+        return completion

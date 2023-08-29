@@ -19,17 +19,12 @@ class HumanEvalDataset(BaseDataset):
     {CODE_PROMPT}
     ```
 
+    ### Notes:
     Respond with the entire complete function definition, including a re-stated function definition.
     Use only built-in libraries and numpy, assume no additional imports other than those provided in the problem statement.
     Do not add any comments, be as concise in your code as possible.
 
     ### Response:
-    
-    """
-    )
-    HUMAN_EVAL_TEMPLATE_COMPLETION = textwrap.dedent(
-        """
-    {CODE_PROMPT}
     """
     )
 
@@ -37,11 +32,6 @@ class HumanEvalDataset(BaseDataset):
     def raw_prompt(self) -> str:
         """Concrete property to get the raw prompt for a HumanEval problem."""
         return HumanEvalDataset.HUMAN_EVAL_TEMPLATE
-
-    @property
-    def raw_completion_prompt(self) -> str:
-        """Concrete property to get the raw completion prompt for a HumanEval problem."""
-        return HumanEvalDataset.HUMAN_EVAL_TEMPLATE_COMPLETION
 
     @property
     def input_paths(self) -> List[str]:
