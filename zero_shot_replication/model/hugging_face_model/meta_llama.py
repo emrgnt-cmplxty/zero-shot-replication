@@ -29,14 +29,14 @@ class LocalLLamaModel:
         model: str,
         temperature: float,
         hf_access_token: str,
-        max_output_length=None,
+        max_new_tokens=None,
     ) -> None:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         logger.info(f"Selecting device = {self.device}")
 
         self.hf_access_token = hf_access_token
-        self.max_output_length = (
-            max_output_length or LocalLLamaModel.MAX_OUTPUT_LENGTH
+        self.max_new_tokens = (
+            max_new_tokens or LocalLLamaModel.MAX_OUTPUT_LENGTH
         )
         self.tokenizer = LlamaTokenizer.from_pretrained(
             model,
@@ -73,7 +73,7 @@ class LocalLLamaModel:
             inputs["input_ids"],
             generation_config=generation_config,
             do_sample=True,
-            max_new_tokens=self.max_output_length,
+            max_new_tokens=self.max_new_tokens,
         )
 
         output = output[0].to(self.device)
