@@ -33,6 +33,10 @@ def get_dataset(problem_type: ProblemType) -> BaseDataset:
             from zero_shot_replication.datasets.math import MATHDataset
 
             dataset = MATHDataset()
+        case ProblemType.MSFT_SPARKS_AGI:
+            from zero_shot_replication.datasets.sparks_of_agi import SparksOfAGIDataset
+
+            dataset = SparksOfAGIDataset()
         case _:
             raise NotImplementedError(
                 f"Problem type not implemented for {problem_type}."
