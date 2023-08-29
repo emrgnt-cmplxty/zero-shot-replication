@@ -88,18 +88,24 @@ class AutomataZeroShotProvider(LargeLanguageModelProvider):
             model=model_name.value,
             temperature=temperature,
             stream=stream,
-            tools=PyInterpreterOpenAIToolkitBuilder().build_for_open_ai(),
+            tools=[],  # PyInterpreterOpenAIToolkitBuilder().build_for_open_ai(),
             system_instruction=AutomataZeroShotProvider.ADVANCED_SYSTEM_PROMPT,
         )
         self._model = OpenAIModel(model_name, temperature, stream)
 
     def get_completion(self, prompt: str) -> str:
+        """Get a completion from Automata based on the provided prompt."""
         from automata.agent import OpenAIAutomataAgent
 
-        """Get a completion from Automata based on the provided prompt."""
+        print("prompt = ", prompt)
         logger.info(f"Getting completion from Automata for model={self.model}")
-        agent = OpenAIAutomataAgent(prompt, self.agent_config)
-        return agent.run()
+        agent = OpenAIAutomataAgent(
+            f"### Instruction\nComplete the following function and then return the result as a Markdown python snippet with call-termination.\n\n### Problem\n{prompt}",
+            self.agent_config,
+        )
+        completion = agent.run()
+        print("completion = ", completion)
+        return completion
 
     @property
     def model(self) -> OpenAIModel:
