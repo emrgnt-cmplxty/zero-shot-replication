@@ -1,6 +1,13 @@
-from zero_shot_replication.model.base import LargeLanguageModel, ModelName
-from zero_shot_replication.model.hugging_face_model.hf_llama import (
-    HuggingFaceLlamaModel,
+from zero_shot_replication.model.base import (
+    LargeLanguageModel,
+    ModelName,
+    PromptMode,
+)
+from zero_shot_replication.model.hugging_face_model.phind_model import (
+    HuggingFacePhindModel,
+)
+from zero_shot_replication.model.hugging_face_model.wizard_model import (
+    HuggingFaceWizardModel,
 )
 
 
@@ -26,10 +33,26 @@ class HuggingFaceModel(LargeLanguageModel):
             raise ValueError(
                 "Stream is not supported for HuggingFace in this framework."
             )
+        super().__init__(
+            model_name,
+            temperature,
+            stream,
+            prompt_mode=PromptMode.HUMAN_FEEDBACK,
+        )
+
         if model_name in HuggingFaceModel.META_MODELS:
             raise NotImplementedError("Meta models are not supported yet.")
-        else:
-            self.model = HuggingFaceLlamaModel(
+        elif model_name == ModelName.WIZARD_LM_PYTHON_34B:
+            self.model: LargeLanguageModel = HuggingFaceWizardModel(
+                model_name,
+                temperature,
+                stream,
+            )
+        elif (
+            model_name == ModelName.PHIND_LM_PYTHON_34B
+            or model_name == ModelName.PHIND_LM_PYTHON_34B_V2
+        ):
+            self.model = HuggingFacePhindModel(
                 model_name,
                 temperature,
                 stream,

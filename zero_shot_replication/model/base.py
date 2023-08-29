@@ -34,6 +34,8 @@ class ModelName(Enum):
 
     # Other HF Open Source Models
     WIZARD_LM_PYTHON_34B = "WizardLM/WizardCoder-Python-34B-V1.0"
+    PHIND_LM_PYTHON_34B = "Phind/Phind-CodeLlama-34B-v1"
+    PHIND_LM_PYTHON_34B_V2 = "Phind/Phind-CodeLlama-34B-v2"
 
 
 class LargeLanguageModel(ABC):

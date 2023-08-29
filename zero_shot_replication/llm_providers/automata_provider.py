@@ -1,11 +1,13 @@
 import logging
 import textwrap
-from zero_shot_replication.llm_providers.base import LLMProvider
+
+from zero_shot_replication.llm_providers.base import LargeLanguageModelProvider
+from zero_shot_replication.model import ModelName, OpenAIModel
 
 logger = logging.getLogger(__name__)
 
 
-class AutomataZeroShotProvider(LLMProvider):
+class AutomataZeroShotProvider(LargeLanguageModelProvider):
     """A class to provide zero-shot completions from Automata."""
 
     ADVANCED_SYSTEM_PROMPT = textwrap.dedent(
@@ -66,46 +68,45 @@ class AutomataZeroShotProvider(LLMProvider):
 
     def __init__(
         self,
-        model: str = "gpt-4-0314",
+        model_name: ModelName = ModelName.GPT_4,
         temperature: float = 0.7,
-        stream: bool = False,
+        stream: bool = True,
     ) -> None:
         try:
-            import zero_shot_replication.automata  # noqa: F401
+            import automata  # noqa: F401
         except ImportError as e:
             raise ImportError(
-                "Automata is not installed. To install, run `https://github.com/emrgnt-cmplxty/automata.git zero_shot_replication/automata`"
+                "Automata is not installed, please install before attempting to run with automata.`"
             ) from e
 
-        from zero_shot_replication.automata.agent import (
-            OpenAIAutomataAgent,
-        )
-        from zero_shot_replication.automata.config import (
-            OpenAIAutomataAgentConfig,
-        )
-        from zero_shot_replication.automata.experimental.tools import (
+        from automata.config import OpenAIAutomataAgentConfig
+        from automata.tools.builders import (  # WolframAlphaOpenAIToolkitBuilder,
             PyInterpreterOpenAIToolkitBuilder,
         )
 
-        self.model = model
-        self.temperature = temperature
-        self.stream = stream
         self.agent_config = OpenAIAutomataAgentConfig(
-            stream=stream,
-            verbose=True,
-            tools=PyInterpreterOpenAIToolkitBuilder().build_for_open_ai(),
-            system_instruction=self.ADVANCED_SYSTEM_PROMPT,  # Set system_instruction to ADVANCED_SYSTEM_PROMPT
-            model=model,
+            model=model_name.value,
             temperature=temperature,
+            stream=stream,
+            tools=[],  # PyInterpreterOpenAIToolkitBuilder().build_for_open_ai(),
+            system_instruction=AutomataZeroShotProvider.ADVANCED_SYSTEM_PROMPT,
         )
+        self._model = OpenAIModel(model_name, temperature, stream)
 
     def get_completion(self, prompt: str) -> str:
         """Get a completion from Automata based on the provided prompt."""
-        full_prompt = prompt
-        logger.info(f"Getting completion from Automata for model={self.model}")
-        agent = OpenAIAutomataAgent(full_prompt, self.agent_config)
-        
-        # Execute the agent to get the completion
-        return agent.run()
-        
+        from automata.agent import OpenAIAutomataAgent
 
+        print("prompt = ", prompt)
+        logger.info(f"Getting completion from Automata for model={self.model}")
+        agent = OpenAIAutomataAgent(
+            f"### Instruction\nComplete the following function and then return the result as a Markdown python snippet with call-termination.\n\n### Problem\n{prompt}",
+            self.agent_config,
+        )
+        completion = agent.run()
+        print("completion = ", completion)
+        return completion
+
+    @property
+    def model(self) -> OpenAIModel:
+        return self._model

@@ -1,6 +1,9 @@
 from zero_shot_replication.llm_providers.anthropic_provider import (
     AnthropicZeroShotProvider,
 )
+from zero_shot_replication.llm_providers.automata_provider import (
+    AutomataZeroShotProvider,
+)
 from zero_shot_replication.llm_providers.base import (
     MODEL_SETS,
     LargeLanguageModelProvider,
@@ -34,12 +37,8 @@ class ProviderManager:
             HuggingFaceZeroShotProvider,
         ),
         ProviderConfig(
-            "automata",
-            [
-                "gpt-3.5-turbo-0301",
-                "gpt-3.5-turbo",
-                "gpt-4-0314",
-            ],
+            ProviderName.AUTOMATA,
+            MODEL_SETS[ProviderName.OPENAI],
             AutomataZeroShotProvider,
         ),
     ]

@@ -10,6 +10,7 @@ class ProviderName(Enum):
     OPENAI = "openai"
     ANTHROPIC = "anthropic"
     HUGGING_FACE = "hugging-face"
+    AUTOMATA = "automata"
 
 
 class LargeLanguageModelProvider(ABC):
@@ -61,5 +62,7 @@ MODEL_SETS = {
         ModelName.CODE_LLAMA_13B,
         ModelName.CODE_LLAMA_34B,
         ModelName.WIZARD_LM_PYTHON_34B,
+        ModelName.PHIND_LM_PYTHON_34B,
+        ModelName.PHIND_LM_PYTHON_34B_V2,
     ],
 }
