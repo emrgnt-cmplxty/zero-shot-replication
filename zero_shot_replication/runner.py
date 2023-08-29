@@ -80,39 +80,47 @@ if __name__ == "__main__":
 
     # Run the experiment
     for task_id, problem in dataset.generator:
-        if task_id in exising_task_ids:
-            print(
-                f"Continuing over existing task_id: {task_id} as it already exists."
-            )
-            continue
+        try:
+            if task_id in exising_task_ids:
+                print(
+                    f"Continuing over existing task_id: {task_id} as it already exists."
+                )
+                continue
 
-        prompt = llm_provider.model.get_formatted_prompt(problem, dataset)
+            prompt = llm_provider.model.get_formatted_prompt(problem, dataset)
 
-        print(f"\n{'-'*200}\nTaskId:\n{task_id}\nPrompt:\n{prompt}\n")
+            print(f"\n{'-'*200}\nTaskId:\n{task_id}\nPrompt:\n{prompt}\n")
 
-        # try:
-        raw_completion = llm_provider.get_completion(prompt)
-        if args.pset in ["human-eval", "leetcode"]:
-            # or other codegen
-            completion = extract_code(raw_completion)
-        else:
-            completion = raw_completion
+            # try:
+            raw_completion = llm_provider.get_completion(prompt)
+            if args.pset in ["human-eval", "leetcode"]:
+                # or other codegen
+                completion = extract_code(raw_completion)
+            else:
+                completion = raw_completion
 
-        print(f"Extracted Completion:\n{completion}\n")
+            print(f"Extracted Completion:\n{completion}\n")
 
-        result = {
-            **problem,
-            "task_id": task_id,
-            "completion": completion,
-            "raw_completion": raw_completion,
-            "actual_prompt": prompt,
-        }
-        results.append(result)
+            result = {
+                **problem,
+                "task_id": task_id,
+                "completion": completion,
+                "raw_completion": raw_completion,
+                "actual_prompt": prompt,
+            }
+            results.append(result)
+
+        except (
+            openai.error.OpenAIError,
+            Exception,
+        ) as e:  # Catch any OpenAI specific errors and general exceptions
+            print(f"Error encountered for task_id {task_id}: {e}")
+            result = {
+                **problem,
+                "task_id": task_id,
+                "completion": "Error encountered",
+                "raw_completion": "Error encountered",
+                "actual_prompt": prompt,
+            }
+
         write_jsonl(out_path, results)
-
-        # except (
-        #     openai.error.OpenAIError,
-        #     Exception,
-        # ) as e:  # Catch any OpenAI specific errors and general exceptions
-        #     print(f"Error encountered for task_id {task_id}: {e}")
-        #     continue
