@@ -10,6 +10,7 @@ class ProviderName(Enum):
     OPENAI = "openai"
     ANTHROPIC = "anthropic"
     HUGGING_FACE = "hugging-face"
+    AUTOMATA = "automata"
 
 
 class LargeLanguageModelProvider(ABC):

@@ -12,11 +12,11 @@ class OpenAIZeroShotProvider(LargeLanguageModelProvider):
 
     def __init__(
         self,
-        model: ModelName,
+        model_name: ModelName,
         temperature: float = 0.7,
         stream: bool = False,
     ) -> None:
-        self._model = OpenAIModel(model, temperature, stream)
+        self._model = OpenAIModel(model_name, temperature, stream)
 
     def get_completion(self, prompt: str) -> str:
         """Get a completion from the OpenAI API based on the provided prompt."""
