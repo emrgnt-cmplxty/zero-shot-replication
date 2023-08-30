@@ -20,7 +20,7 @@ def read_existing_results(out_path: str) -> list[dict]:
 
 
 def get_input_path(args: argparse.Namespace) -> str:
-    """Get the output path for the given arguments."""
+    """Get the input path for the given arguments."""
     input_dir = os.path.join(
         get_root_dir(),
         "results",
@@ -41,5 +41,6 @@ def get_input_path(args: argparse.Namespace) -> str:
             MODEL=prep_for_file_path(args.model),
             TEMPERATURE=prep_for_file_path(str(args.temperature)),
             QUANTIZATION=prep_for_file_path(str(args.quantization)),
+            VERSION=prep_for_file_path(str(args.version)),
         ),
     )

@@ -110,6 +110,11 @@ def parse_arguments() -> argparse.Namespace:
         default=None,
         help="Path to the solutions file to analyze",
     )
+    parser.add_argument(
+        "--version",
+        default="0.1.0",
+        help="Model version."
+        )
 
     return parser.parse_args()
 
