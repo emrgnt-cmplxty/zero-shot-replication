@@ -16,19 +16,19 @@ accelerate = "^0.22.0"
 anthropic = "^0.3.10"
 astunparse = "1.6.3"
 black = "^23.3.0"
-evalplus = "^0.1.6"
+evalplus = { version = "^0.1.6", optional = true }
 numpy = "^1.25.2"
-leetcode_env = { path = "zero_shot_replication/evals/leetcode_hard_gym" }
 openai = "0.27.8"
 pandas = "^2.0.3"
 python-dotenv = "^1.0.0"
-python-leetcode = "1.2.1"
+python-leetcode = {version="1.2.1", optional = true }
 sentencepiece = "^0.1.99"
 torch = "2.0.1"
 protobuf = "~4.23.4"
-vllm = "0.1.4"
+vllm = { version = "0.1.4", optional = true }
 # Remote repositories
-automata = { git = "https://github.com/emrgnt-cmplxty/automata.git", branch = "feature/automata-slim" }
+automata = { git = "https://github.com/emrgnt-cmplxty/automata.git", branch = "feature/automata-slim", optional = true }
+leetcode_env = { path = "zero_shot_replication/evals/leetcode_hard_gym", optional = true }
 
 # Hand managed dependencies
 
