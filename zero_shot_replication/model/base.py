@@ -49,6 +49,8 @@ class ModelName(Enum):
 class LargeLanguageModel(ABC):
     """An abstract class to provide a common interface for LLMs."""
 
+    VERSION = "0.1.0"
+
     def __init__(
         self,
         model_name: ModelName,

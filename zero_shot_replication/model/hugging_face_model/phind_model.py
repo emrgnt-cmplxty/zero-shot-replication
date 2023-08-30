@@ -19,10 +19,11 @@ class HuggingFacePhindModel(LargeLanguageModel):
 
     # TODO - Make these upstream configurations?
     MAX_TOTAL_TOKENS = 4_096
-    MAX_NEW_TOKENS = 384
+    MAX_NEW_TOKENS = 1_024
     TOP_K = 40
     TOP_P = 0.75
     DO_SAMPLE = True
+    VERSION = "0.1.0"
 
     def __init__(
         self,
@@ -33,6 +34,20 @@ class HuggingFacePhindModel(LargeLanguageModel):
     ) -> None:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         logger.info(f"Selecting device = {self.device}")
+
+        import transformers
+
+        # Check if it's from a Git installation
+        try:
+            # Accessing this attribute will fail if the package was installed from PyPI
+            git_version = transformers.__git_version__
+            logger.info(
+                f"Installed from GitHub (branch: main) with Git version: {git_version}"
+            )
+        except AttributeError:
+            raise ValueError(
+                f"Installed from PyPI with version: {transformers.__version__}"
+            )
 
         super().__init__(
             model_name,

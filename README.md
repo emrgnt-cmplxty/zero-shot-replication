@@ -28,16 +28,16 @@ The Zero-Shot Replication Framework is a minimal environment designed to replica
 | Category             | wizard-coder-34b | phind-v2  | gpt-4-0613|
 |----------------------|------------------|-----------|------------|
 | *Standard Bench*     |                  |           |            |
-| HumanEval            | 70.7             | 73.1      | 84.1       |
-| HumanEval+           | 60.3             | 65.9      | 74.4       |
+| HumanEval            | 70.7             | 76.2      | 84.1       |
+| HumanEval+           | 60.3             | 72.0      | 74.4       |
 | MATH                 | N/A              | N/A       | 50.3       |
 | **LeetCodeSparks**   |                  |           |            |
-| Easy                 | 38.1             | 47.6      | 61.2       |
+| Easy                 | 38.1             | 52.6      | 61.2       |
 | Medium               | 12.2             | 7.3       | 31.7       |
 | Hard                 | 0.0              | 0.0       | 13.6       |
 | **LeetCode100**      |                  |           |            |
-| Easy                 | 71.0             | 59.0      | 88.0       |
-| Medium               | 9.0              | 4.0       | 21.0       |
+| Easy                 | 71.0             | 63.0      | 88.0       |
+| Medium               | 9.0              | 5.0       | 21.0       |
 | Hard                 | 2.0              | 3.0       | 6.0        |
 
 **The gpt-4 LeetCodeSparks baseline is approximate, as we do not see a precise list of LeetCode problems listed in the referenced reports. We define 'LeetCodeSparks' as the 84 problems used for the human evaluation measurement mentioned in [2]*

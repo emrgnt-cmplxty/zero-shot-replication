@@ -2,11 +2,10 @@ import argparse
 import json
 import logging
 import os
+from typing import TYPE_CHECKING
 
 import pandas as pd
 import torch
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from zero_shot_replication.model import Quantization
@@ -139,10 +138,6 @@ def get_configured_logger(name: str, log_level: str) -> logging.Logger:
         level=log_level, format="%(asctime)s - %(levelname)s - %(message)s"
     )
     return logging.getLogger(name)
-
-
-def get_root_fpath() -> str:
-    return os.path.dirname(os.path.abspath(__file__))
 
 
 def quantization_to_kwargs(quantization: "Quantization") -> dict:

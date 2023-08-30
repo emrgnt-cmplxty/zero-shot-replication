@@ -19,7 +19,7 @@ from zero_shot_replication.llm_providers import ProviderManager, ProviderName
 from zero_shot_replication.model import ModelName, Quantization
 
 
-def get_output_path(args: argparse.Namespace) -> str:
+def get_output_path(args: argparse.Namespace, version: str) -> str:
     """Get the output path for the given arguments."""
 
     output_dir = os.path.join(
@@ -42,6 +42,7 @@ def get_output_path(args: argparse.Namespace) -> str:
             MODEL=prep_for_file_path(args.model),
             TEMPERATURE=prep_for_file_path(str(args.temperature)),
             QUANTIZATION=prep_for_file_path(str(args.quantization)),
+            VERSION=prep_for_file_path(version),
         ),
     )
 
@@ -76,7 +77,7 @@ if __name__ == "__main__":
     dataset = get_dataset(ProblemType(args.pset))
 
     # Get the output path
-    out_path = get_output_path(args)
+    out_path = get_output_path(args, llm_provider.model.VERSION)
 
     # Load existing results
     results = load_existing_jsonl(out_path)
