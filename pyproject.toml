@@ -28,9 +28,11 @@ python-leetcode = "1.2.1"
 # *recommended for Phind and WizardCoder*
 # transformers = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
 sentencepiece = "^0.1.99"
-torch = "2.0.0"
+torch = "2.0.1"
 transformers = "4.32.0"
 protobuf = "~4.23.4"
+# xformers = "^0.0.21"
+# vllm = "0.1.14"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "6.1.0"

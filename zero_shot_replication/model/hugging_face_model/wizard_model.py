@@ -1,12 +1,7 @@
 import logging
 
 import torch
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    GenerationConfig,
-    __version__,
-)
+from transformers import GenerationConfig, __version__
 
 from zero_shot_replication.core.utils import quantization_to_kwargs
 from zero_shot_replication.model.base import (
@@ -51,51 +46,53 @@ class HuggingFaceWizardModel(LargeLanguageModel):
             stream,
             prompt_mode=PromptMode.HUMAN_FEEDBACK,
         )
-        self.max_new_tokens = (
-            max_new_tokens or HuggingFaceWizardModel.MAX_NEW_TOKENS
-        )
 
-        # TODO - Add support for 4-bit
+        try:
+            from vllm import LLM, SamplingParams
+        except:
+            raise ValueError("vllm must be installed to run Wizard models.")
 
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            model_name.value,
-            # device_map="auto",
-            # **quantization_to_kwargs(quantization),
-        )
-
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_name.value,
-            device_map="auto",
-            **quantization_to_kwargs(quantization),
+        # TODO - Introduce multi-gpu support
+        self.model = LLM(base_model=model_name.value, tensor_parallel_size=1)
+        self.sampling_params = SamplingParams(
+            temperature=temperature,
+            top_p=1,
+            max_tokens=HuggingFaceWizardModel.MAX_NEW_TOKENS,
         )
         self.temperature = temperature
 
     def get_completion(self, prompt: str) -> str:
         """Generate the completion from the Wizard model."""
-        inputs = self.tokenizer(
-            prompt, return_tensors="pt", truncation=True, padding=True
-        ).to(self.device)
-        self.model.config.pad_token_id = self.tokenizer.pad_token_id
+        with torch.no_grad():
+            completions = self.llm.generate([prompt], self.sampling_params)
+        gen_seqs = completions[0].outputs[0].text
+        print("gen_seqs = ", gen_seqs)
+        return gen_seqs[0].split("### Response:")[-1]
 
-        generation_config = GenerationConfig(
-            temperature=self.temperature,
-            top_p=HuggingFaceWizardModel.TOP_P,
-            top_k=HuggingFaceWizardModel.TOP_K,
-            num_beams=HuggingFaceWizardModel.NUM_BEAMS,
-            eos_token_id=self.tokenizer.eos_token_id,
-            pad_token_id=self.tokenizer.pad_token_id,
-            do_sample=True,
-        )
+        # inputs = self.tokenizer(
+        #     prompt, return_tensors="pt", truncation=True, padding=True
+        # ).to(self.device)
+        # self.model.config.pad_token_id = self.tokenizer.pad_token_id
 
-        generate_ids = self.model.generate(
-            inputs["input_ids"],
-            generation_config=generation_config,
-            max_new_tokens=self.max_new_tokens,
-        )
-        completion = self.tokenizer.batch_decode(
-            generate_ids, skip_special_tokens=True
-        )[0]
+        # generation_config = GenerationConfig(
+        #     temperature=self.temperature,
+        #     top_p=HuggingFaceWizardModel.TOP_P,
+        #     top_k=HuggingFaceWizardModel.TOP_K,
+        #     num_beams=HuggingFaceWizardModel.NUM_BEAMS,
+        #     eos_token_id=self.tokenizer.eos_token_id,
+        #     pad_token_id=self.tokenizer.pad_token_id,
+        #     do_sample=True,
+        # )
 
-        if prompt in completion:
-            completion = completion.split(prompt)[1]
-        return completion
+        # generate_ids = self.model.generate(
+        #     inputs["input_ids"],
+        #     generation_config=generation_config,
+        #     max_new_tokens=self.max_new_tokens,
+        # )
+        # completion = self.tokenizer.batch_decode(
+        #     generate_ids, skip_special_tokens=True
+        # )[0]
+
+        # if prompt in completion:
+        #     completion = completion.split(prompt)[1]
+        # return completion
