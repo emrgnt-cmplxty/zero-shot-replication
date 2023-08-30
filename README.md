@@ -84,7 +84,12 @@ poetry install
 
 ### Optional Feature Requirements
 
-- **Phind Model Gen.**: `transformers_git`
+For additional features, you can install the optional dependencies:
+
+```bash
+poetry install -E <extra_name>
+```
+
 - **WizardCode Model Gen.**: `vllm_support`
 - **Automata Agent Gen.**: `automata`
 - **Leetcode Evaluation**: `python-leetcode`
