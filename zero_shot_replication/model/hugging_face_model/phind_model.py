@@ -1,8 +1,5 @@
 import logging
 
-import torch
-from transformers import AutoTokenizer, LlamaForCausalLM, __version__
-
 from zero_shot_replication.core.utils import quantization_to_kwargs
 from zero_shot_replication.model.base import (
     LargeLanguageModel,
@@ -32,15 +29,16 @@ class HuggingFacePhindModel(LargeLanguageModel):
         temperature: float,
         stream: bool,
     ) -> None:
+        try:
+            import torch
+            from transformers_git import AutoTokenizer, LlamaForCausalLM
+        except ImportError:
+            raise ValueError(
+                "Project must be installed with optional package transformers_git to run Phind."
+            )
+
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         logger.info(f"Selecting device = {self.device}")
-
-        # TODO - It is possible that the main branch might not be in dev mode
-        # this check can be made more robust.
-        if "dev" not in __version__:
-            raise ValueError(
-                f"Installed from PyPI with version: {__version__}"
-            )
 
         super().__init__(
             model_name,

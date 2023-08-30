@@ -15,24 +15,36 @@ python = ">=3.11,<3.12"
 accelerate = "^0.22.0"
 anthropic = "^0.3.10"
 astunparse = "1.6.3"
-automata = { git = "https://github.com/emrgnt-cmplxty/automata.git", branch = "feature/automata-slim" }
 black = "^23.3.0"
 evalplus = "^0.1.6"
-leetcode_env = { path = "zero_shot_replication/evals/leetcode_hard_gym" }
 numpy = "^1.25.2"
+leetcode_env = { path = "zero_shot_replication/evals/leetcode_hard_gym" }
 openai = "0.27.8"
 pandas = "^2.0.3"
 python-dotenv = "^1.0.0"
 python-leetcode = "1.2.1"
-# uncomment if running transformers off main brach of GitHub
-# *recommended for Phind and WizardCoder*
-# transformers = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
 sentencepiece = "^0.1.99"
 torch = "2.0.1"
 transformers = "4.32.0"
 protobuf = "~4.23.4"
-# xformers = "^0.0.21"
-# vllm = "0.1.14"
+vllm = "0.1.14"
+# Remote repositories
+automata = { git = "https://github.com/emrgnt-cmplxty/automata.git", branch = "feature/automata-slim" }
+transformers_git = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
+
+[tool.poetry.extras]
+vllm_support = ["vllm"]
+# For use with all non-Phind models
+transformers_pypi = ["transformers"]
+# For use with `Phind` model
+transformers_git = ["transformers_git"]
+# For running `automata` evaluation
+automata_support = ["automata"]
+# For running `leetcode` evaluation
+leetcode_support = ["python-leetcode", "leetcode_env"]
+# For runing `HumanEval` and `HumanEval+` evaluations
+humaneval_support = ["evalplus"]
+
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "6.1.0"
