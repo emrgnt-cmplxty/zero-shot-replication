@@ -91,9 +91,9 @@ poetry install -E <extra_name>
 ```
 
 - **WizardCode Model Gen.**: `vllm_support`
+- **Phind Model Gen.**: `transformers must be installed from git (currently by hand)`
 - **Automata Agent Gen.**: `automata`
 - **Leetcode Evaluation**: `python-leetcode`
-- **HumanEval and HumanEval+ Modes**: `evalplus`
 
 ## Usage
 
