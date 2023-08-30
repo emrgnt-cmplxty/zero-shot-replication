@@ -1,7 +1,7 @@
 import logging
 
 import torch
-from transformers import AutoTokenizer, LlamaForCausalLM
+from transformers import AutoTokenizer, LlamaForCausalLM, __version__
 
 from zero_shot_replication.core.utils import quantization_to_kwargs
 from zero_shot_replication.model.base import (
@@ -35,18 +35,11 @@ class HuggingFacePhindModel(LargeLanguageModel):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         logger.info(f"Selecting device = {self.device}")
 
-        import transformers
-
-        # Check if it's from a Git installation
-        try:
-            # Accessing this attribute will fail if the package was installed from PyPI
-            git_version = transformers.__git_version__
-            logger.info(
-                f"Installed from GitHub (branch: main) with Git version: {git_version}"
-            )
-        except AttributeError:
+        # TODO - It is possible that the main branch might not be in dev mode
+        # this check can be made more robust.
+        if "dev" not in __version__:
             raise ValueError(
-                f"Installed from PyPI with version: {transformers.__version__}"
+                f"Installed from PyPI with version: {__version__}"
             )
 
         super().__init__(
