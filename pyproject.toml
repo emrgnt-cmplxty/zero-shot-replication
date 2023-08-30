@@ -29,15 +29,16 @@ vllm = { version = "0.1.4", optional = true }
 # Remote repositories
 automata = { git = "https://github.com/emrgnt-cmplxty/automata.git", branch = "feature/automata-slim", optional = true }
 leetcode_env = { path = "zero_shot_replication/evals/leetcode_hard_gym", optional = true }
+bitsandbytes = "^0.41.1"
+scipy = "^1.11.2"
 
 # Hand managed dependencies
 
 # For use with all non-Phind models
-transformers = "4.32.0"
+#transformers = "4.32.0"
 # For use with `Phind` model
-# transformers = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
-bitsandbytes = "^0.41.1"
-scipy = "^1.11.2"
+transformers = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
+
 
 [tool.poetry.extras]
 vllm_support = ["vllm"]
