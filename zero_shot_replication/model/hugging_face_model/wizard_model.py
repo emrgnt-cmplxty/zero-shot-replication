@@ -32,12 +32,6 @@ class HuggingFaceWizardModel(LargeLanguageModel):
         stream: bool,
         max_new_tokens=None,
     ) -> None:
-        try:
-            from vllm import LLM, SamplingParams
-        except ImportError as e:
-            raise ValueError(
-                "Project must be installed with optional package vllm to run WizardCoder."
-            ) from e
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         logger.info(f"Selecting device = {self.device}")
 
@@ -55,6 +49,13 @@ class HuggingFaceWizardModel(LargeLanguageModel):
         )
 
         if self.default_mode:
+            try:
+                from vllm import LLM, SamplingParams
+            except ImportError as e:
+                raise ValueError(
+                    "Project must be installed with optional package vllm to run WizardCoder."
+                ) from e
+
             # TODO - Introduce multi-gpu support
             self.model = LLM(model=model_name.value, tensor_parallel_size=1)
             self.sampling_params = SamplingParams(
