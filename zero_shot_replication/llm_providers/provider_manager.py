@@ -21,8 +21,10 @@ from zero_shot_replication.model import ModelName, Quantization
 
 class ProviderManager:
     AUTOMATA_MODELS = [
-        model for model in MODEL_SETS[ProviderName.OPENAI]
-        if model not in [ModelName.GPT_3p5_TURBO_0301, ModelName.GPT_3p5_TURBO_0613]
+        model
+        for model in MODEL_SETS[ProviderName.OPENAI]
+        if model
+        not in [ModelName.GPT_3p5_TURBO_0301, ModelName.GPT_3p5_TURBO_0613]
     ]
 
     PROVIDERS = [

@@ -37,7 +37,7 @@ class SparksOfAGIDataset(BaseDataset):
                 SparksOfAGIDataset.INPUT_FILE,
             )
         ]
-    
+
     @property
     def generator(self) -> Generator[Tuple[str, Any], None, None]:
         """Concrete method to get a generator over the MATH problems."""
@@ -55,4 +55,7 @@ class SparksOfAGIDataset(BaseDataset):
         prompt_mode: PromptMode = PromptMode.HUMAN_FEEDBACK,
     ) -> str:
         """Concrete method to get the formatted prompt for MATH problems."""
-        return self.raw_prompt.format(TASK_PROMPT="Please answer the following:", QUESTION=problem.get("question"))
+        return self.raw_prompt.format(
+            TASK_PROMPT="Please answer the following:",
+            QUESTION=problem.get("question"),
+        )

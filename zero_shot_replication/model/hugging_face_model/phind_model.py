@@ -47,7 +47,7 @@ class HuggingFacePhindModel(LargeLanguageModel):
             stream,
             prompt_mode=PromptMode.HUMAN_FEEDBACK,
         )
-        # TODO - Add support for 4-bit
+
         self.model = LlamaForCausalLM.from_pretrained(
             model_name.value,
             device_map="auto",
