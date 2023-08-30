@@ -3,7 +3,11 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List, Type
 
-from zero_shot_replication.model.base import LargeLanguageModel, ModelName
+from zero_shot_replication.model import (
+    LargeLanguageModel,
+    ModelName,
+    Quantization,
+)
 
 
 class ProviderName(Enum):
@@ -17,7 +21,12 @@ class LargeLanguageModelProvider(ABC):
     """An abstract class to provide a common interface for LLM providers."""
 
     @abstractmethod
-    def __init__(self, model_name: ModelName, temperature: float) -> None:
+    def __init__(
+        self,
+        model_name: ModelName,
+        quantization: Quantization,
+        temperature: float,
+    ) -> None:
         pass
 
     @property

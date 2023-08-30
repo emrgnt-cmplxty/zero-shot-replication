@@ -6,26 +6,43 @@ The Zero-Shot Replication Framework is a minimal environment designed to replica
 
 ## Results (all models accessed on 08/24-8/25, 2023)
 
-| Category             | gpt-3.5-turbo-0301 | gpt-3.5-turbo-0613 | claude-2 | gpt-4-0314 | gpt-4-0613 | wizard-coder-34b | gpt-4 Baseline | Sources  |
-|----------------------|--------------------|--------------------|----------|------------|------------|------------------|----------------|----------|
-| *Standard Bench*     |                    |                    |          |            |            |                  |                |          |
-| HumanEval            | 67.0               | 61.5               | 65.2     | 86.0       | 84.1       | 70.7             | 67.0           | [1]      |
-| HumanEval+           | 59.1               | 54.2               | 54.9     | 80.5       | 74.4       | 60.3             | N/A            |          |
-| MATH                 | 35.4               | 37.2               | 17.6     | 51.6       | 50.3       | N/A              | 42.2           | [3]      |
-| **LeetCodeSparks**   |                    |                    |          |            |            |                  |                | [1,2]    |
-| Easy                 | 60.0               | 76.2               | 52.4     | 76.2       | 61.2       | 38.1             | 68.2-75.6      | [1,2]*   |
-| Medium               | 15.0               | 22.0               | 9.8      | 19.5       | 31.7       | 12.2             | 26.7-40.0      | [1,2]*   |
-| Hard                 | 0.0                | 0.0                | 0.0      | 4.6        | 13.6       | 0.0              | 6.6-10.7       | [1,2]*   |
-| **LeetCode100**      |                    |                    |          |            |            |                  |                |          |
-| Easy                 | 83.0               | 80.0               | 73.0     | 91.0       | 88.0       | 71.0             | N/A            |          |
-| Medium               | 16.0               | 16.0               | 16.0     | 26.0       | 21.0       | 9.0              | N/A            |          |
-| Hard                 | 1.0                | 3.0                | 2.0      | 6.0        | 6.0        | 2.0              | N/A            |          |
+### Proprietary Models
+
+| Category             | gpt-3.5-turbo-0301 | gpt-3.5-turbo-0613 | claude-2 | gpt-4-0314 | gpt-4-0613 | gpt-4 Baseline | Sources  |
+|----------------------|--------------------|--------------------|----------|------------|------------|----------------|----------|
+| *Standard Bench*     |                    |                    |          |            |            |                |          |
+| HumanEval            | 67.0               | 61.5               | 65.2     | 86.0       | 84.1       | 67.0           | [1]      |
+| HumanEval+           | 59.1               | 54.2               | 54.9     | 80.5       | 74.4       | N/A            |          |
+| MATH                 | 35.4               | 37.2               | 17.6     | 51.6       | 50.3       | 42.2           | [3]      |
+| **LeetCodeSparks**   |                    |                    |          |            |            |                | [1,2]    |
+| Easy                 | 60.0               | 76.2               | 52.4     | 76.2       | 61.2       | 68.2-75.6      | [1,2]*   |
+| Medium               | 15.0               | 22.0               | 9.8      | 19.5       | 31.7       | 26.7-40.0      | [1,2]*   |
+| Hard                 | 0.0                | 0.0                | 0.0      | 4.6        | 13.6       | 6.6-10.7       | [1,2]*   |
+| **LeetCode100**      |                    |                    |          |            |            |                |          |
+| Easy                 | 83.0               | 80.0               | 73.0     | 91.0       | 88.0       | N/A            |          |
+| Medium               | 16.0               | 16.0               | 16.0     | 26.0       | 21.0       | N/A            |          |
+| Hard                 | 1.0                | 3.0                | 2.0      | 6.0        | 6.0        | N/A            |          |
+
+### OpenSource Models (vs latest GPT-4)
+
+| Category             | wizard-coder-34b | phind-v2  | gpt-4-0613|
+|----------------------|------------------|-----------|------------|
+| *Standard Bench*     |                  |           |            |
+| HumanEval            | 70.7             | 76.2      | 84.1       |
+| HumanEval+           | 60.3             | 72.0      | 74.4       |
+| MATH                 | N/A              | N/A       | 50.3       |
+| **LeetCodeSparks**   |                  |           |            |
+| Easy                 | 38.1             | 52.6      | 61.2       |
+| Medium               | 12.2             | 7.3       | 31.7       |
+| Hard                 | 0.0              | 0.0       | 13.6       |
+| **LeetCode100**      |                  |           |            |
+| Easy                 | 71.0             | 63.0      | 88.0       |
+| Medium               | 9.0              | 5.0       | 21.0       |
+| Hard                 | 2.0              | 3.0       | 6.0        |
 
 **The gpt-4 LeetCodeSparks baseline is approximate, as we do not see a precise list of LeetCode problems listed in the referenced reports. We define 'LeetCodeSparks' as the 84 problems used for the human evaluation measurement mentioned in [2]*
 
 'LeetCode_100' is an expected out-of-sample dataset we introduce of 100 recent easy, medium, and hard LeetCode problems. The problems live in the range 2554-2818.
-
-<!-- | GSM8K | 71.1 | 67.6 | Pend. | 90.4 | 91.0 | | 87.1 | [2] | -->
 
 ## Features
 
@@ -35,28 +52,30 @@ The Zero-Shot Replication Framework is a minimal environment designed to replica
 
 ## Requirements
 
-- Python >= 3.10 and < 3.12
+- Python >= 3.11 and < 3.12
 - Poetry for package management
 
 ## Min. Dependencies
 
-- anthropic: "0.3.10"
+- anthropic: "^0.3.10"
 - astunparse: "1.6.3"
-- black: ^23.3.0
-- evalplus: ^0.1.6
+- black: "^23.3.0"
+- evalplus: "^0.1.6"
 - numpy: "^1.25.2"
-- openai: 0.27.8
-- pandas: ^2.0.3
-- python-dotenv: ^1.0.0
+- openai: "0.27.8"
+- pandas: "^2.0.3"
+- python-dotenv: "^1.0.0"
 - python-leetcode: "1.2.1"
-
-## Extra Dependencies
-- automata
-- transformers: "^4.32.0"
-- torch: "1.13.1"
+- transformers: "4.32.1"
+- torch: "2.0.1"
 - accelerate: "^0.22.0"
 - sentencepiece: "^0.1.99"
-- protobuf: "^4.24.1"
+- protobuf: "~4.23.4"
+
+## Extra Dependencies
+
+- automata (from a specific branch: feature/automata-slim on GitHub, manual setup required)
+- transformers (optional from main branch of GitHub: https://github.com/huggingface/transformers.git, manual setup required)
 
 ## Dev Dependencies
 
@@ -81,15 +100,10 @@ poetry install # to install automata, poetry install -E automata
 cp .env.example .env # Copy the example environment file
 # Edit the .env file to add your OpenAI API key, etc.
 
-
 # Optional
 
 # If developing, install the pre-commit hooks
 # pre-commit install 
-
-# If using automata, install the repo
-# git submodule add -f https://github.com/emrgnt-cmplxty/zero-shot-replication.git zero_shot_replication/automata
-
 ```
 
 ## Usage

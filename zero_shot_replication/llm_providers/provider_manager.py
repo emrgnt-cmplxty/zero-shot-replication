@@ -16,7 +16,7 @@ from zero_shot_replication.llm_providers.hugging_face_provider import (
 from zero_shot_replication.llm_providers.openai_provider import (
     OpenAIZeroShotProvider,
 )
-from zero_shot_replication.model import ModelName
+from zero_shot_replication.model import ModelName, Quantization
 
 
 class ProviderManager:
@@ -50,7 +50,11 @@ class ProviderManager:
 
     @staticmethod
     def get_provider(
-        provider_name: ProviderName, model_name: ModelName, *args, **kwargs
+        provider_name: ProviderName,
+        model_name: ModelName,
+        quantization: Quantization,
+        *args,
+        **kwargs,
     ) -> LargeLanguageModelProvider:
         for provider in ProviderManager.PROVIDERS:
             if (

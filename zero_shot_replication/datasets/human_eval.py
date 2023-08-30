@@ -25,12 +25,6 @@ class HumanEvalDataset(BaseDataset):
     Do not add any comments, be as concise in your code as possible.
 
     ### Response:
-    
-    """
-    )
-    HUMAN_EVAL_TEMPLATE_COMPLETION = textwrap.dedent(
-        """
-    {CODE_PROMPT}
     """
     )
 
@@ -38,11 +32,6 @@ class HumanEvalDataset(BaseDataset):
     def raw_prompt(self) -> str:
         """Concrete property to get the raw prompt for a HumanEval problem."""
         return HumanEvalDataset.HUMAN_EVAL_TEMPLATE
-
-    @property
-    def raw_completion_prompt(self) -> str:
-        """Concrete property to get the raw completion prompt for a HumanEval problem."""
-        return HumanEvalDataset.HUMAN_EVAL_TEMPLATE_COMPLETION
 
     @property
     def input_paths(self) -> List[str]:
@@ -67,7 +56,7 @@ class HumanEvalDataset(BaseDataset):
         """Concrete method to get the formatted prompt for HumanEval problems."""
         match prompt_mode:
             case PromptMode.HUMAN_FEEDBACK:
-                return self.raw_completion_prompt.format(
+                return self.raw_prompt.format(
                     CODE_PROMPT=problem["prompt"]
                 )
             case PromptMode.COMPLETION:

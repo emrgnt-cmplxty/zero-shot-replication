@@ -11,35 +11,34 @@ license = "Apache-2.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.12"
-black = "^23.3.0"
-openai = "0.27.8"
-python-dotenv = "^1.0.0"
-evalplus = "^0.1.6"
-pandas = "^2.0.3"
-leetcode_env = { path = "zero_shot_replication/evals/leetcode_hard_gym" }
-python-leetcode = "1.2.1"
-astunparse = "1.6.3"
-anthropic = "^0.3.10"
-numpy = "^1.25.2"
-transformers = "^4.32.0"
-torch = "2.0.1"
+python = ">=3.11,<3.12"
 accelerate = "^0.22.0"
-sentencepiece = "^0.1.99"
-protobuf = "~4.23.4"
-# uncomment if running automata
-# automata = { git = "https://github.com/emrgnt-cmplxty/automata.git", branch = "feature/automata-slim" }
-# uncomment if running transformers off main
+anthropic = "^0.3.10"
+astunparse = "1.6.3"
+automata = { git = "https://github.com/emrgnt-cmplxty/automata.git", branch = "feature/automata-slim" }
+black = "^23.3.0"
+leetcode_env = { path = "zero_shot_replication/evals/leetcode_hard_gym" }
+numpy = "^1.25.2"
+openai = "0.27.8"
+pandas = "^2.0.3"
+python-dotenv = "^1.0.0"
+python-leetcode = "1.2.1"
+# uncomment if running transformers off main brach of GitHub
+# *recommended for Phind and WizardCoder*
 # transformers = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
+sentencepiece = "^0.1.99"
+torch = "2.0.0"
+transformers = "4.32.1"
+protobuf = "~4.23.4"
 
 [tool.poetry.group.dev.dependencies]
-sourcery = "^1.6.0"
+flake8 = "6.1.0"
+isort = "5.12.0"
 pre-commit = "^3.3.3"
 mypy = "^1.5.1"
+sourcery = "^1.6.0"
 types-requests = "^2.31.0.2"
 types-attrs = "^19.1.0"
-isort = "5.12.0"
-flake8 = "6.1.0"
 yapf = "0.40.1"
 
 [tool.black]

@@ -4,6 +4,7 @@ from zero_shot_replication.model.base import (
     LargeLanguageModel,
     ModelName,
     PromptMode,
+    Quantization,
 )
 
 
@@ -13,6 +14,7 @@ class AnthropicModel(LargeLanguageModel):
     def __init__(
         self,
         model_name: ModelName,
+        quantization: Quantization,
         temperature: float,
         stream: bool,
         max_tokens_to_sample: int,
@@ -24,6 +26,7 @@ class AnthropicModel(LargeLanguageModel):
 
         super().__init__(
             model_name,
+            quantization,
             temperature,
             stream,
             prompt_mode=PromptMode.HUMAN_FEEDBACK,

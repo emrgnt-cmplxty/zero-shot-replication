@@ -2,6 +2,7 @@ from zero_shot_replication.model.base import (
     LargeLanguageModel,
     ModelName,
     PromptMode,
+    Quantization,
 )
 from zero_shot_replication.model.hugging_face_model.phind_model import (
     HuggingFacePhindModel,
@@ -26,6 +27,7 @@ class HuggingFaceModel(LargeLanguageModel):
     def __init__(
         self,
         model_name: ModelName = ModelName.GPT_4,
+        quantization: Quantization = Quantization.float16,
         temperature: float = 0.7,
         stream: bool = False,
     ) -> None:
@@ -35,6 +37,7 @@ class HuggingFaceModel(LargeLanguageModel):
             )
         super().__init__(
             model_name,
+            quantization,
             temperature,
             stream,
             prompt_mode=PromptMode.HUMAN_FEEDBACK,
@@ -45,15 +48,17 @@ class HuggingFaceModel(LargeLanguageModel):
         elif model_name == ModelName.WIZARD_LM_PYTHON_34B:
             self.model: LargeLanguageModel = HuggingFaceWizardModel(
                 model_name,
+                quantization,
                 temperature,
                 stream,
             )
-        elif (
-            model_name == ModelName.PHIND_LM_PYTHON_34B
-            or model_name == ModelName.PHIND_LM_PYTHON_34B_V2
-        ):
+        elif model_name in [
+            ModelName.PHIND_LM_PYTHON_34B,
+            ModelName.PHIND_LM_PYTHON_34B_V2,
+        ]:
             self.model = HuggingFacePhindModel(
                 model_name,
+                quantization,
                 temperature,
                 stream,
             )

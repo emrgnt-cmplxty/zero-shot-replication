@@ -5,6 +5,14 @@ from typing import Any
 from zero_shot_replication.core import BaseDataset, PromptMode
 
 
+class Quantization(Enum):
+    proprietary = "proprietary"
+    float16 = "float16"
+    bfloat16 = "bfloat16"
+    four_bit = "four-bit"
+    eight_bit = "eight-bit"
+
+
 class ModelName(Enum):
     """An enum to hold the names of the models."""
 
@@ -41,14 +49,18 @@ class ModelName(Enum):
 class LargeLanguageModel(ABC):
     """An abstract class to provide a common interface for LLMs."""
 
+    VERSION = "0.1.0"
+
     def __init__(
         self,
         model_name: ModelName,
+        quantization: Quantization,
         temperature: float,
         stream: bool,
         prompt_mode: PromptMode,
     ) -> None:
         self.model_name = model_name
+        self.quantization = quantization
         self.temperature = temperature
         self.stream = stream
         self.prompt_mode = prompt_mode

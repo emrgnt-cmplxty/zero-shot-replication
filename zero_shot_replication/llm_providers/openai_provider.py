@@ -2,7 +2,7 @@
 import logging
 
 from zero_shot_replication.llm_providers.base import LargeLanguageModelProvider
-from zero_shot_replication.model import ModelName, OpenAIModel
+from zero_shot_replication.model import ModelName, OpenAIModel, Quantization
 
 logger = logging.getLogger(__name__)
 
@@ -13,10 +13,18 @@ class OpenAIZeroShotProvider(LargeLanguageModelProvider):
     def __init__(
         self,
         model_name: ModelName,
+        quantization: Quantization = Quantization.proprietary,
         temperature: float = 0.7,
         stream: bool = False,
     ) -> None:
-        self._model = OpenAIModel(model_name, temperature, stream)
+        if quantization != Quantization.proprietary:
+            raise ValueError(
+                "Anthropic models only support proprietary quantization."
+            )
+
+        self._model = OpenAIModel(
+            model_name, quantization, temperature, stream
+        )
 
     def get_completion(self, prompt: str) -> str:
         """Get a completion from the OpenAI API based on the provided prompt."""

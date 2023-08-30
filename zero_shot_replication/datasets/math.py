@@ -23,6 +23,9 @@ class MATHDataset(BaseDataset):
     {TASK_PROMPT}
 
     Ensure your solution is presented in BOXED LATEX format, e.g. `$\\boxed{{YOUR_SOLUTION}}$`.
+
+    ### Response:
+    
     """
     )
 

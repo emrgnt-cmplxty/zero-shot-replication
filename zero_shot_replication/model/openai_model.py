@@ -4,6 +4,7 @@ from zero_shot_replication.model.base import (
     LargeLanguageModel,
     ModelName,
     PromptMode,
+    Quantization,
 )
 
 
@@ -13,6 +14,7 @@ class OpenAIModel(LargeLanguageModel):
     def __init__(
         self,
         model_name: ModelName = ModelName.GPT_4,
+        quantization: Quantization = Quantization.float16,
         temperature: float = 0.7,
         stream: bool = False,
     ) -> None:
@@ -22,6 +24,7 @@ class OpenAIModel(LargeLanguageModel):
             )
         super().__init__(
             model_name,
+            quantization,
             temperature,
             stream,
             prompt_mode=PromptMode.HUMAN_FEEDBACK,

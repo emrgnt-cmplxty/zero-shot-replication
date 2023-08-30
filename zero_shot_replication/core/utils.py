@@ -2,8 +2,13 @@ import argparse
 import json
 import logging
 import os
+from typing import TYPE_CHECKING
 
 import pandas as pd
+import torch
+
+if TYPE_CHECKING:
+    from zero_shot_replication.model import Quantization
 
 
 def load_file_or_raise(path: str):
@@ -61,6 +66,24 @@ def parse_arguments() -> argparse.Namespace:
         help="Which provider to use for zero-shot completions?",
     )
     parser.add_argument(
+        "--model",
+        type=str,
+        default="gpt-3.5-turbo",
+        help="Model name to load from the provider.",
+    )
+    parser.add_argument(
+        "--quantization",
+        type=str,
+        default="proprietary",
+        help="What quantization to run the model with?",
+    )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.7,
+        help="Temperature parameter for provided model.",
+    )
+    parser.add_argument(
         "--stream",
         type=bool,
         default=False,
@@ -71,18 +94,6 @@ def parse_arguments() -> argparse.Namespace:
         type=str,
         default="human-eval",
         help="Which pset to run on?",
-    )
-    parser.add_argument(
-        "--model",
-        type=str,
-        default="gpt-3.5-turbo",
-        help="Model name to load from the provider.",
-    )
-    parser.add_argument(
-        "--temperature",
-        type=float,
-        default=0.7,
-        help="Temperature parameter for provided model.",
     )
     parser.add_argument(
         "--output_file_name",
@@ -129,5 +140,19 @@ def get_configured_logger(name: str, log_level: str) -> logging.Logger:
     return logging.getLogger(name)
 
 
-def get_root_fpath() -> str:
-    return os.path.dirname(os.path.abspath(__file__))
+def quantization_to_kwargs(quantization: "Quantization") -> dict:
+    """Convert a quantization to kwargs for the model."""
+    from zero_shot_replication.model import Quantization
+
+    if quantization in [Quantization.float16, Quantization.bfloat16]:
+        return {
+            "torch_dtype": torch.float16
+            if quantization == Quantization.float16
+            else torch.bfloat16
+        }
+    elif quantization == Quantization.eight_bit:
+        return {"load_in_8bit": True}
+    elif quantization == Quantization.four_bit:
+        return {"load_in_4bit": True}
+    else:
+        raise ValueError(f"Unsupported quantization: {quantization.value}")
