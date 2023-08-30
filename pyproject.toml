@@ -17,6 +17,7 @@ anthropic = "^0.3.10"
 astunparse = "1.6.3"
 automata = { git = "https://github.com/emrgnt-cmplxty/automata.git", branch = "feature/automata-slim" }
 black = "^23.3.0"
+evalplus = "^0.1.6"
 leetcode_env = { path = "zero_shot_replication/evals/leetcode_hard_gym" }
 numpy = "^1.25.2"
 openai = "0.27.8"
@@ -28,7 +29,7 @@ python-leetcode = "1.2.1"
 # transformers = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
 sentencepiece = "^0.1.99"
 torch = "2.0.0"
-transformers = "4.32.1"
+transformers = "4.32.0"
 protobuf = "~4.23.4"
 
 [tool.poetry.group.dev.dependencies]
