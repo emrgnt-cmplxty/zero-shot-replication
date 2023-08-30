@@ -36,6 +36,8 @@ leetcode_env = { path = "zero_shot_replication/evals/leetcode_hard_gym", optiona
 transformers = "4.32.0"
 # For use with `Phind` model
 # transformers = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
+bitsandbytes = "^0.41.1"
+scipy = "^1.11.2"
 
 [tool.poetry.extras]
 vllm_support = ["vllm"]
