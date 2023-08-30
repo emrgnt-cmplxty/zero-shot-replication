@@ -33,7 +33,7 @@ To better understand these results, please check the notes below
 
 ### OpenSource Models (vs latest GPT-4)
 
-| Category             | wizard-coder-34b | phind-v2  | gpt-4-0613|
+| Category             | wizard-coder-34b | phind-v2  | gpt-4-0613 |
 |----------------------|------------------|-----------|------------|
 | *Standard Bench*     |                  |           |            |
 | HumanEval            | 69.5             | 75.0      | 84.1       |
@@ -44,7 +44,7 @@ To better understand these results, please check the notes below
 | Medium               | 12.2             | 7.3       | 31.7       |
 | Hard                 | 0.0              | 0.0       | 13.6       |
 | **LeetCode100**      |                  |           |            |
-| Easy                 | 71.0             | 63.0      | 88.0       |
+| Easy                 | 68.0             | 63.0      | 88.0       |
 | Medium               | 9.0              | 5.0       | 21.0       |
 | Hard                 | 0.0              | 3.0       | 6.0        |
 
