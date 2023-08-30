@@ -27,7 +27,7 @@ class HuggingFaceWizardModel(LargeLanguageModel):
     TOP_K = 40
     TOP_P = 0.9
     NUM_BEAMS = 1
-    TRANSFORMERS_VERSION = "4.32.1"
+    TRANSFORMERS_VERSION = "4.32.0"
     VERSION = "0.1.0"
 
     def __init__(

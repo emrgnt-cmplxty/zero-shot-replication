@@ -1,8 +1,9 @@
 # Local cruft and other
-**/.DS_Store
+poetry.lock
 .env
 *.bak
 **/__pycache__/**
+**/.DS_Store
 
 zero_shot_replication/automata
 
