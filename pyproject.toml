@@ -23,7 +23,7 @@ pandas = "^2.0.3"
 python-dotenv = "^1.0.0"
 python-leetcode = {version="1.2.1", optional = true }
 sentencepiece = "^0.1.99"
-torch = "2.0.0"
+torch = "2.0.1"
 protobuf = "~4.23.4"
 vllm = { version = "0.1.4", optional = true }
 # Remote repositories
