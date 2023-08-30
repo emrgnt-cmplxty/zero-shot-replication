@@ -43,6 +43,7 @@ class HuggingFaceWizardModel(LargeLanguageModel):
             prompt_mode=PromptMode.HUMAN_FEEDBACK,
         )
         # If using the default quantization, use VLLM to match WizardCoder eval
+        print('quantization = ', quantization)
         self.default_mode = quantization == Quantization.float16
         self.max_new_tokens = (
             max_new_tokens or HuggingFaceWizardModel.MAX_NEW_TOKENS
