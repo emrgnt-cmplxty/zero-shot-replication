@@ -51,8 +51,9 @@ class HuggingFaceWizardModel(LargeLanguageModel):
         # If using the default quantization, use VLLM to match WizardCoder eval
         self.default_mode = quantization == Quantization.float16
         self.max_new_tokens = (
-            max_new_tokens or HuggingFaceWizardModel.MAX_NEW_TOKENS,
+            max_new_tokens or HuggingFaceWizardModel.MAX_NEW_TOKENS
         )
+
         if self.default_mode:
             # TODO - Introduce multi-gpu support
             self.model = LLM(model=model_name.value, tensor_parallel_size=1)

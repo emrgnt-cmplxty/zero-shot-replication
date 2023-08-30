@@ -69,11 +69,13 @@ poetry install
 ### Optional Dependencies
 
 - `vllm_support`: For VLLM functionalities, required for `WizardCoder` model.
-- `transformers_pypi`: Transformers package from PyPI, suitable for most use cases.
-- `transformers_git`: Transformers from GitHub, recommended for `Phind` model.
 - `automata`: For `automata` agent evaluations.
 - `python-leetcode`: For `leetcode` evaluations.
 - `evalplus`: For `HumanEval` and `HumanEval+` evaluations.
+
+### Possible Weirdness
+
+I sometimes see that setting `torch==2.0.1` results in issues with the cuda environment initialization on my remote machine. One workaround was to first install `torch=2.0.0`, which requires commenting out of vllm, and to then increment the torch version and uncoment vllm. This may solve some user issues.
 
 ---
 
