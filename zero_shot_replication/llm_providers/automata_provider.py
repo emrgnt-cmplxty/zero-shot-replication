@@ -1,10 +1,14 @@
 import logging
+import logging.config
 import textwrap
+
+from automata.core.utils import get_logging_config
 
 from zero_shot_replication.llm_providers.base import LargeLanguageModelProvider
 from zero_shot_replication.model import ModelName, OpenAIModel, Quantization
 
 logger = logging.getLogger(__name__)
+logging.config.dictConfig(get_logging_config())
 
 
 class AutomataZeroShotProvider(LargeLanguageModelProvider):
