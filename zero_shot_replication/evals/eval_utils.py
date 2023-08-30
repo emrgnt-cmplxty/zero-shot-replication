@@ -41,5 +41,6 @@ def get_input_path(args: argparse.Namespace) -> str:
             MODEL=prep_for_file_path(args.model),
             TEMPERATURE=prep_for_file_path(str(args.temperature)),
             QUANTIZATION=prep_for_file_path(str(args.quantization)),
+            VERSION=prep_for_file_path(args.version),
         ),
     )

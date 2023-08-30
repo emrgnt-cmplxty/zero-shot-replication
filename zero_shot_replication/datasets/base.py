@@ -34,7 +34,9 @@ def get_dataset(problem_type: ProblemType) -> BaseDataset:
 
             dataset = MATHDataset()
         case ProblemType.MSFT_SPARKS_AGI:
-            from zero_shot_replication.datasets.sparks_of_agi import SparksOfAGIDataset
+            from zero_shot_replication.datasets.sparks_of_agi import (
+                SparksOfAGIDataset,
+            )
 
             dataset = SparksOfAGIDataset()
         case _:
