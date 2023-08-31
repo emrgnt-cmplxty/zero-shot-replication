@@ -4,6 +4,9 @@ from zero_shot_replication.model.base import (
     PromptMode,
     Quantization,
 )
+from zero_shot_replication.model.hugging_face_model.meta_llama import (
+    HuggingFaceLlamaModel,
+)
 from zero_shot_replication.model.hugging_face_model.phind_model import (
     HuggingFacePhindModel,
 )
@@ -19,9 +22,9 @@ class HuggingFaceModel(LargeLanguageModel):
         ModelName.LLAMA_2_7B_HF,
         ModelName.LLAMA_2_13B_HF,
         ModelName.LLAMA_2_70B_HF,
-        ModelName.CODE_LLAMA_7B,
-        ModelName.CODE_LLAMA_13B,
-        ModelName.CODE_LLAMA_34B,
+        ModelName.CODE_LLAMA_7B_HF,
+        ModelName.CODE_LLAMA_7B_HF,
+        ModelName.CODE_LLAMA_7B_HF,
     ]
 
     def __init__(
@@ -44,7 +47,12 @@ class HuggingFaceModel(LargeLanguageModel):
         )
 
         if model_name in HuggingFaceModel.META_MODELS:
-            raise NotImplementedError("Meta models are not supported yet.")
+            self.model: LargeLanguageModel = HuggingFaceLlamaModel(
+                model_name,
+                quantization,
+                temperature,
+                stream,
+            )
         elif model_name == ModelName.WIZARD_LM_PYTHON_34B:
             self.model: LargeLanguageModel = HuggingFaceWizardModel(
                 model_name,
@@ -62,6 +70,10 @@ class HuggingFaceModel(LargeLanguageModel):
                 temperature,
                 stream,
             )
+
+        # need to reset the prompt mode to the actual model used
+        # there is two layer of models (one is this current wrapper file, and the other actual model)
+        self.prompt_mode = self.model.prompt_mode
 
     def get_completion(self, prompt: str) -> str:
         """Get a completion from the OpenAI API based on the provided messages."""
