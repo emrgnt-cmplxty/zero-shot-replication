@@ -25,6 +25,9 @@ class HuggingFaceModel(LargeLanguageModel):
         ModelName.CODE_LLAMA_7B_HF,
         ModelName.CODE_LLAMA_13B_HF,
         ModelName.CODE_LLAMA_34B_HF,
+        ModelName.CODE_LLAMA_7B_PYTHON_HF,
+        ModelName.CODE_LLAMA_13B_PYTHON_HF,
+        ModelName.CODE_LLAMA_34B_PYTHON_HF,
     ]
 
     def __init__(
