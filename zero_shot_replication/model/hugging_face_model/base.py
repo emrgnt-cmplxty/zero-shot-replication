@@ -23,8 +23,8 @@ class HuggingFaceModel(LargeLanguageModel):
         ModelName.LLAMA_2_13B_HF,
         ModelName.LLAMA_2_70B_HF,
         ModelName.CODE_LLAMA_7B_HF,
-        ModelName.CODE_LLAMA_7B_HF,
-        ModelName.CODE_LLAMA_7B_HF,
+        ModelName.CODE_LLAMA_13B_HF,
+        ModelName.CODE_LLAMA_34B_HF,
     ]
 
     def __init__(
@@ -70,6 +70,8 @@ class HuggingFaceModel(LargeLanguageModel):
                 temperature,
                 stream,
             )
+        else:
+            raise ValueError(f"Model {model_name} not supported.")
 
         # need to reset the prompt mode to the actual model used
         # there is two layer of models (one is this current wrapper file, and the other actual model)

@@ -78,6 +78,7 @@ class HuggingFaceLlamaModel(LargeLanguageModel):
             top_p=HuggingFaceLlamaModel.TOP_P,
             top_k=HuggingFaceLlamaModel.TOP_K,
             temperature=self.temperature,
+            pad_token_id=self.tokenizer.eos_token_id,
         )
         completion = self.tokenizer.batch_decode(
             generate_ids,
