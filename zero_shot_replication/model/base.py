@@ -44,7 +44,9 @@ class ModelName(Enum):
     CODE_LLAMA_34B_PYTHON_HF = "codellama/CodeLlama-34b-Python-hf"
 
     # Meta Open Source Models local (weights need to be downloaded)
-    # TODO
+    CODE_LLAMA_7B_PYTHON = "CodeLlama-7b-Python"
+    CODE_LLAMA_13B_PYTHON = "CodeLlama-13b-Python"
+    CODE_LLAMA_34B_PYTHON = "CodeLlama-34b-Python"
 
     # Other HF Open Source Models
     WIZARD_LM_PYTHON_34B = "WizardLM/WizardCoder-Python-34B-V1.0"

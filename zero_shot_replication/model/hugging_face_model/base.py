@@ -6,6 +6,7 @@ from zero_shot_replication.model.base import (
 )
 from zero_shot_replication.model.hugging_face_model.meta_llama import (
     HuggingFaceLlamaModel,
+    LocalLlamaModel,
 )
 from zero_shot_replication.model.hugging_face_model.phind_model import (
     HuggingFacePhindModel,
@@ -30,6 +31,12 @@ class HuggingFaceModel(LargeLanguageModel):
         ModelName.CODE_LLAMA_34B_PYTHON_HF,
     ]
 
+    LOCAL_MODELS = [
+        ModelName.CODE_LLAMA_7B_PYTHON,
+        ModelName.CODE_LLAMA_13B_PYTHON,
+        ModelName.CODE_LLAMA_34B_PYTHON,
+    ]
+
     def __init__(
         self,
         model_name: ModelName = ModelName.GPT_4,
@@ -51,6 +58,13 @@ class HuggingFaceModel(LargeLanguageModel):
 
         if model_name in HuggingFaceModel.META_MODELS:
             self.model: LargeLanguageModel = HuggingFaceLlamaModel(
+                model_name,
+                quantization,
+                temperature,
+                stream,
+            )
+        elif model_name in HuggingFaceModel.LOCAL_MODELS:
+            self.model: LargeLanguageModel = LocalLlamaModel(
                 model_name,
                 quantization,
                 temperature,

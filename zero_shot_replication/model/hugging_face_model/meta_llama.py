@@ -3,13 +3,9 @@ import os
 
 import torch
 from transformers import (
-    AutoModelForCausalLM,
     AutoTokenizer,
-    GenerationConfig,
     LlamaForCausalLM,
-    LlamaTokenizer,
     StoppingCriteria,
-    StoppingCriteriaList,
 )
 
 from zero_shot_replication.core.utils import quantization_to_kwargs
@@ -63,7 +59,7 @@ class HuggingFaceLlamaModel(LargeLanguageModel):
 
     def get_completion(self, prompt: str) -> str:
         self.tokenizer.pad_token = self.tokenizer.eos_token
-        inputs = self.tokenizer(
+        inputs = self.tokenizer.encode(
             prompt,
             return_tensors="pt",
             truncation=True,
@@ -72,7 +68,7 @@ class HuggingFaceLlamaModel(LargeLanguageModel):
 
         # Generate
         generate_ids = self.model.generate(
-            inputs["input_ids"],
+            inputs,
             max_new_tokens=HuggingFaceLlamaModel.MAX_NEW_TOKENS,
             do_sample=HuggingFaceLlamaModel.DO_SAMPLE,
             top_p=HuggingFaceLlamaModel.TOP_P,
@@ -81,78 +77,12 @@ class HuggingFaceLlamaModel(LargeLanguageModel):
             pad_token_id=self.tokenizer.eos_token_id,
         )
         completion = self.tokenizer.batch_decode(
-            generate_ids,
+            generate_ids[:, len(inputs[0]) :],
             skip_special_tokens=True,
             clean_up_tokenization_spaces=False,
         )[0]
-        completion = completion.replace(prompt, "").split("\n\n\n")[0]
+        completion = prompt + completion.split("\n\n\n")[0]
         return completion
-
-
-class LocalLLamaModel:
-    """A class to provide zero-shot completions from a local Llama model."""
-
-    # TODO - Make these upstream configurations
-    MAX_OUTPUT_LENGTH = 2048
-    TOP_K = 40
-    TOP_P = 0.9
-    NUM_BEAMS = 1
-    VERSION = "0.1.0"
-
-    def __init__(
-        self,
-        model: str,
-        temperature: float,
-        hf_access_token: str,
-        max_new_tokens=None,
-    ) -> None:
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        logger.info(f"Selecting device = {self.device}")
-
-        self.hf_access_token = hf_access_token
-        self.max_new_tokens = (
-            max_new_tokens or LocalLLamaModel.MAX_OUTPUT_LENGTH
-        )
-        self.tokenizer = LlamaTokenizer.from_pretrained(
-            model,
-            torch_dtype=torch.float16,
-            device_map="auto",
-            use_auth_token=self.hf_access_token,
-        )
-
-        self.model = LlamaForCausalLM.from_pretrained(
-            model,
-            torch_dtype=torch.float16,
-            device_map="auto",
-            use_auth_token=self.hf_access_token,
-        )
-        self.temperature = temperature
-
-    def get_completion(self, prompt: str, *args, **kwargs) -> str:
-        """Generate the completion from the local Llama model."""
-        # TODO - Move all configurations upstream
-
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
-
-        generation_config = GenerationConfig(
-            temperature=self.temperature,
-            top_p=LocalLLamaModel.TOP_P,
-            top_k=LocalLLamaModel.TOP_K,
-            num_beams=LocalLLamaModel.NUM_BEAMS,
-            eos_token_id=self.tokenizer.eos_token_id,
-            pad_token_id=self.tokenizer.pad_token_id,
-            do_sample=True,
-        )
-
-        output = self.model.generate(
-            inputs["input_ids"],
-            generation_config=generation_config,
-            do_sample=True,
-            max_new_tokens=self.max_new_tokens,
-        )
-
-        output = output[0].to(self.device)
-        return self.tokenizer.decode(output)
 
 
 HUMANEVAL_EOS = [
@@ -218,14 +148,23 @@ class EndOfFunctionCriteria(StoppingCriteria):
 CODE_LLAMA_ROOT = os.environ.get("CODE_LLAMA_ROOT", "/JawTitan/codellama/")
 
 
-# S1: Install package from https://github.com/facebookresearch/codellama
-# S2: Install model to ${CODE_LLAMA_ROOT} (This can be any actual path)
-# S3: CODE_LLAMA_ROOT=?? torchrun --nproc_per_node 1 codegen/generate.py --model code-llama-7b --bs 1 --temperature 0 --n_samples 1 --resume --greedy
-class CodeLlama:
+# S1: Install package from https://github.com/facebookresearch/codellama S2: Install model to ${CODE_LLAMA_ROOT} (
+# This can be any actual path) S3: CODE_LLAMA_ROOT=?? torchrun --nproc_per_node 1 codegen/generate.py --model
+# code-llama-7b --bs 1 --temperature 0 --n_samples 1 --resume --greedy
+class LocalLlamaModel(LargeLanguageModel):
+    MAX_TOTAL_TOKENS = 4_096
+    MAX_NEW_TOKENS = 1_024
+    TOP_K = 40
+    TOP_P = 0.75
+    DO_SAMPLE = True
+
+    # VERSION = "0.1.0" version shouldn't be needed in here
     def __init__(
         self,
-        model: str,
+        model_name: ModelName,
+        quantization: Quantization,
         temperature: float,
+        stream: bool,
     ) -> None:
         assert CODE_LLAMA_ROOT is not None
         from llama import (  # See https://github.com/facebookresearch/codellama
@@ -234,12 +173,21 @@ class CodeLlama:
 
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         logger.info(f"Selecting device = {self.device}")
+
+        super().__init__(
+            model_name,
+            quantization,
+            temperature,
+            stream,
+            prompt_mode=PromptMode.COMPLETION,
+        )
+
         self.generator = Llama.build(
-            ckpt_dir=os.path.join(CODE_LLAMA_ROOT, model),
+            ckpt_dir=os.path.join(CODE_LLAMA_ROOT, model_name.value),
             tokenizer_path=os.path.join(
-                CODE_LLAMA_ROOT, model, "tokenizer.model"
+                CODE_LLAMA_ROOT, model_name.value, "tokenizer.model"
             ),
-            max_seq_len=512,
+            max_seq_len=LocalLlamaModel.MAX_TOTAL_TOKENS,
             max_batch_size=1,
         )
         self.temperature = temperature
@@ -255,12 +203,13 @@ class CodeLlama:
         new_code = tmp
         return new_code
 
-    def get_completion(self, prompt: str, *args, **kwargs) -> str:
+    def get_completion(self, prompt: str) -> str:
         gen_strs = self.generator.text_completion(
             [prompt],
-            max_gen_len=512,
+            max_gen_len=LocalLlamaModel.MAX_NEW_TOKENS,
             temperature=self.temperature,
-            top_p=0.95,
+            top_p=LocalLlamaModel.TOP_P,
+            # top_k=LocalLlamaModel.TOP_K, # local model actually doesn't support top_k
         )
         gen_str = [gen_str["generation"] for gen_str in gen_strs][0]
 
@@ -271,77 +220,3 @@ class CodeLlama:
                 min_index = min(min_index, gen_str.index(eos))
 
         return self.sanitize(prompt + gen_str[:min_index])
-
-
-# HUGGING_FACE VARIANTS OF CODE LLAMA, doesn't seem to work as well as the local version
-class LocalCodeLLamaModel:
-    def __init__(
-        self,
-        model: str,
-        temperature: float,
-        hf_access_token: str,
-        max_output_length=None,
-    ) -> None:
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        logger.info(f"Selecting device = {self.device}")
-
-        self.max_output_length = (
-            max_output_length or LocalLLamaModel.MAX_OUTPUT_LENGTH
-        )
-        self.tokenizer = AutoTokenizer.from_pretrained(model)
-
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model,
-            torch_dtype=torch.float16,
-            device_map="auto",
-        )
-        self.temperature = temperature
-
-    @staticmethod
-    def sanitize(gen_str: str):
-        tmp = ""
-        for line in str.splitlines(gen_str):
-            lspace = len(line) - len(line.lstrip())
-            if lspace == 3:
-                tmp += " "
-            tmp += line + "\n"
-        new_code = tmp
-        return new_code
-
-    def get_completion(self, prompt: str, *args, **kwargs) -> str:
-        inputs = self.tokenizer.encode(prompt.strip(), return_tensors="pt").to(
-            self.device
-        )
-        scores = StoppingCriteriaList(
-            [
-                EndOfFunctionCriteria(
-                    start_length=len(inputs[0]),
-                    eos=EOS,
-                    tokenizer=self.tokenizer,
-                )
-            ]
-        )
-        raw_outputs = self.model.generate(
-            inputs,
-            max_new_tokens=512,
-            stopping_criteria=scores,
-            do_sample=True,
-            top_p=LocalLLamaModel.TOP_P,
-            top_k=LocalLLamaModel.TOP_K,
-            temperature=self.temperature,
-            output_scores=True,
-            return_dict_in_generate=True,
-            num_return_sequences=LocalLLamaModel.NUM_BEAMS,
-            pad_token_id=self.tokenizer.eos_token_id,
-        )  # remove warning
-
-        gen_seqs = raw_outputs.sequences[:, len(inputs[0]) :]
-        gen_str = self.tokenizer.batch_decode(gen_seqs)[0]
-
-        min_index = 10000
-        for eos in EOS:
-            if eos in gen_str:
-                # could be multiple eos in outputs, better pick minimum one
-                min_index = min(min_index, gen_str.index(eos))
-
-        return self.sanitize(prompt + gen_str[:min_index]).strip()
