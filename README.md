@@ -29,7 +29,7 @@ To better understand these results, please check the notes below
 | **LeetCode100**      |                    |                    |          |            |            |                |          |
 | Easy                 | 83.0               | 80.0               | 73.0     | 91.0       | 88.0       | N/A            |          |
 | Medium               | 16.0               | 16.0               | 16.0     | 26.0       | 21.0       | N/A            |          |
-| Hard                 | 1.0                | 3.0                | 2.0      | 6.0        | 6.0        | N/A            |          |
+| Hard                 | 1.0                    | 3.0                | 2.0      | 6.0        | 6.0        | N/A            |          |
 
 ### OpenSource Models (vs latest GPT-4)
 
@@ -72,6 +72,7 @@ poetry install
 - `automata`: For `automata` agent evaluations.
 - `python-leetcode`: For `leetcode` evaluations.
 - `evalplus`: For `HumanEval` and `HumanEval+` evaluations.
+- `quantized_support`: For running 4 or 8 bit models.
 
 ### Possible Weirdness
 

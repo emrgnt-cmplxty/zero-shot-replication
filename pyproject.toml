@@ -15,17 +15,19 @@ python = ">=3.11,<3.12"
 accelerate = "^0.22.0"
 anthropic = "^0.3.10"
 astunparse = "1.6.3"
+bitsandbytes = { version = "^0.41.1", optional = true }
 black = "^23.3.0"
 evalplus = "^0.1.6"
 numpy = "^1.25.2"
 openai = "0.27.8"
 pandas = "^2.0.3"
 python-dotenv = "^1.0.0"
-python-leetcode = {version="1.2.1", optional = true }
+python-leetcode = { version = "1.2.1", optional = true }
 sentencepiece = "^0.1.99"
 torch = "2.0.1"
 protobuf = "~4.23.4"
 vllm = { version = "0.1.4", optional = true }
+scipy = { version = "^1.11.2", optional = true }
 # Remote repositories
 automata = { git = "https://github.com/emrgnt-cmplxty/automata.git", branch = "feature/automata-slim", optional = true }
 leetcode_env = { path = "zero_shot_replication/evals/leetcode_hard_gym", optional = true }
@@ -36,8 +38,6 @@ leetcode_env = { path = "zero_shot_replication/evals/leetcode_hard_gym", optiona
 transformers = "4.32.0"
 # For use with `Phind` model
 # transformers = { git = "https://github.com/huggingface/transformers.git", branch = "main" }
-bitsandbytes = "^0.41.1"
-scipy = "^1.11.2"
 
 [tool.poetry.extras]
 vllm_support = ["vllm"]
@@ -45,9 +45,10 @@ vllm_support = ["vllm"]
 automata_support = ["automata"]
 # For running `leetcode` evaluation
 leetcode_support = ["python-leetcode", "leetcode_env"]
-# For runing `HumanEval` and `HumanEval+` evaluations
+# For running `HumanEval` and `HumanEval+` evaluations
 humaneval_support = ["evalplus"]
-
+# For running quantized models
+quantized_support = ["bitsandbytes", "scipy"]
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "6.1.0"
