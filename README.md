@@ -33,21 +33,19 @@ To better understand these results, please check the notes below
 
 ### OpenSource Models (vs latest GPT-4)
 
-| Category             | code-llama-34b | wizard-coder-34b | phind-v2-34b | gpt-4-0613 |
-|----------------------|----------------|------------------|--------------|------------|
-| *Standard Bench*     |                |                  |              |            |
-| HumanEval            | 56.7           | 69.5             | 75.0         | 84.1       |
-| HumanEval+           | 48.2           | 60.3             | 70.1         | 74.4       |
-| **LeetCodeSparks**   |                |                  |              |            |
-| Easy                 | 33.3           | 42.9             | 52.4         | 61.2       |
-| Medium               | 2.4            | 12.2             | 7.3          | 31.7       |
-| Hard                 | 0.0            | 0.0              | 0.0          | 13.6       |
-| **LeetCode100**      |                |                  |              |            |
-| Easy                 | 53.0           | 68.0             | 63.0         | 88.0       |
-| Medium               | 3.0            | 9.0              | 5.0          | 21.0       |
-| Hard                 | 0.0            | 0.0              | 3.0          | 6.0        |
-
-<!-- | MATH                 | Pend.          | Pend.            | Pend.        | 50.3       | -->
+| Category             | code-llama-34b | wizard-coder-34b | phind-v2-34b |
+|----------------------|----------------|------------------|--------------|
+| *Standard Bench*     |                |                  |              |
+| HumanEval            | 56.7           | 69.5             | 75.0         |
+| HumanEval+           | 48.2           | 60.3             | 70.1         |
+| **LeetCodeSparks**   |                |                  |              |
+| Easy                 | 33.3           | 42.9             | 52.4         |
+| Medium               | 2.4            | 12.2             | 7.3          |
+| Hard                 | 0.0            | 0.0              | 0.0          |
+| **LeetCode100**      |                |                  |              |
+| Easy                 | 53.0           | 68.0             | 63.0         |
+| Medium               | 3.0            | 9.0              | 5.0          |
+| Hard                 | 0.0            | 0.0              | 3.0          |
 
 ### Notes on Results
 
