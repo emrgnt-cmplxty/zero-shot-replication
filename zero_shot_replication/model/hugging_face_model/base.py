@@ -4,8 +4,10 @@ from zero_shot_replication.model.base import (
     PromptMode,
     Quantization,
 )
+from zero_shot_replication.model.hugging_face_model.hf_code_llama import (
+    HuggingFaceCodeLlamaModel,
+)
 from zero_shot_replication.model.hugging_face_model.meta_llama import (
-    HuggingFaceLlamaModel,
     LocalLlamaModel,
 )
 from zero_shot_replication.model.hugging_face_model.phind_model import (
@@ -57,21 +59,21 @@ class HuggingFaceModel(LargeLanguageModel):
         )
 
         if model_name in HuggingFaceModel.META_MODELS:
-            self.model: LargeLanguageModel = HuggingFaceLlamaModel(
+            self.model: LargeLanguageModel = HuggingFaceCodeLlamaModel(
                 model_name,
                 quantization,
                 temperature,
                 stream,
             )
         elif model_name in HuggingFaceModel.LOCAL_MODELS:
-            self.model: LargeLanguageModel = LocalLlamaModel(
+            self.model = LocalLlamaModel(
                 model_name,
                 quantization,
                 temperature,
                 stream,
             )
         elif model_name == ModelName.WIZARD_LM_PYTHON_34B:
-            self.model: LargeLanguageModel = HuggingFaceWizardModel(
+            self.model = HuggingFaceWizardModel(
                 model_name,
                 quantization,
                 temperature,

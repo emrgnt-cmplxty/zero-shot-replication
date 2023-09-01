@@ -29,7 +29,7 @@ To better understand these results, please check the notes below
 | **LeetCode100**      |                    |                    |          |            |            |                |          |
 | Easy                 | 83.0               | 80.0               | 73.0     | 91.0       | 88.0       | N/A            |          |
 | Medium               | 16.0               | 16.0               | 16.0     | 26.0       | 21.0       | N/A            |          |
-| Hard                 | 1.0                    | 3.0                | 2.0      | 6.0        | 6.0        | N/A            |          |
+| Hard                 | 1.0                | 3.0                | 2.0      | 6.0        | 6.0        | N/A            |          |
 
 ### OpenSource Models (vs latest GPT-4)
 

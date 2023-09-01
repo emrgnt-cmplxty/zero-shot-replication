@@ -1,14 +1,10 @@
+"""A module for providing local Meta-Llama completions."""
 import logging
 import os
 
 import torch
-from transformers import (
-    AutoTokenizer,
-    LlamaForCausalLM,
-    StoppingCriteria,
-)
+from transformers import StoppingCriteria
 
-from zero_shot_replication.core.utils import quantization_to_kwargs
 from zero_shot_replication.model.base import (
     LargeLanguageModel,
     ModelName,
@@ -17,73 +13,6 @@ from zero_shot_replication.model.base import (
 )
 
 logger = logging.getLogger(__name__)
-
-
-class HuggingFaceLlamaModel(LargeLanguageModel):
-    MAX_TOTAL_TOKENS = 4_096
-    MAX_NEW_TOKENS = 1_024
-    TOP_K = 40
-    TOP_P = 0.75
-    DO_SAMPLE = True
-    # VERSION = "0.1.0" version shouldn't be needed in here
-
-    def __init__(
-        self,
-        model_name: ModelName,
-        quantization: Quantization,
-        temperature: float,
-        stream: bool,
-    ) -> None:
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        logger.info(f"Selecting device = {self.device}")
-
-        super().__init__(
-            model_name,
-            quantization,
-            temperature,
-            stream,
-            prompt_mode=PromptMode.COMPLETION,
-        )
-        assert quantization == Quantization.bfloat16, "Please use bfloat16"
-
-        self.model = LlamaForCausalLM.from_pretrained(
-            model_name.value,
-            device_map="auto",
-            **quantization_to_kwargs(quantization),
-        )
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            model_name.value,
-            device_map="auto",
-            **quantization_to_kwargs(quantization),
-        )
-
-    def get_completion(self, prompt: str) -> str:
-        self.tokenizer.pad_token = self.tokenizer.eos_token
-        inputs = self.tokenizer.encode(
-            prompt,
-            return_tensors="pt",
-            truncation=True,
-            max_length=HuggingFaceLlamaModel.MAX_TOTAL_TOKENS,
-        ).to(self.device)
-
-        # Generate
-        generate_ids = self.model.generate(
-            inputs,
-            max_new_tokens=HuggingFaceLlamaModel.MAX_NEW_TOKENS,
-            do_sample=HuggingFaceLlamaModel.DO_SAMPLE,
-            top_p=HuggingFaceLlamaModel.TOP_P,
-            top_k=HuggingFaceLlamaModel.TOP_K,
-            temperature=self.temperature,
-            pad_token_id=self.tokenizer.eos_token_id,
-        )
-        completion = self.tokenizer.batch_decode(
-            generate_ids[:, len(inputs[0]) :],
-            skip_special_tokens=True,
-            clean_up_tokenization_spaces=False,
-        )[0]
-        completion = prompt + completion.split("\n\n\n")[0]
-        return completion
-
 
 HUMANEVAL_EOS = [
     "\nclass",
