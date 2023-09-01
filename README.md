@@ -38,7 +38,7 @@ To better understand these results, please check the notes below
 | *Standard Bench*     |                |                  |              |            |
 | HumanEval            | 56.7           | 69.5             | 75.0         | 84.1       |
 | HumanEval+           | 48.2           | 60.3             | 70.1         | 74.4       |
-| MATH                 | Pend.          | Pend.            | Pend.        | 50.3       |
+<!-- | MATH                 | Pend.          | Pend.            | Pend.        | 50.3       | -->
 | **LeetCodeSparks**   |                |                  |              |            |
 | Easy                 | 33.3           | 42.9             | 52.4         | 61.2       |
 | Medium               | 2.4            | 12.2             | 7.3          | 31.7       |
