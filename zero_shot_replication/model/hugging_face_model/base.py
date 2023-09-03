@@ -4,6 +4,12 @@ from zero_shot_replication.model.base import (
     PromptMode,
     Quantization,
 )
+from zero_shot_replication.model.hugging_face_model.hf_code_llama import (
+    HuggingFaceCodeLlamaModel,
+)
+from zero_shot_replication.model.hugging_face_model.meta_llama import (
+    LocalLlamaModel,
+)
 from zero_shot_replication.model.hugging_face_model.phind_model import (
     HuggingFacePhindModel,
 )
@@ -19,9 +25,18 @@ class HuggingFaceModel(LargeLanguageModel):
         ModelName.LLAMA_2_7B_HF,
         ModelName.LLAMA_2_13B_HF,
         ModelName.LLAMA_2_70B_HF,
-        ModelName.CODE_LLAMA_7B,
-        ModelName.CODE_LLAMA_13B,
-        ModelName.CODE_LLAMA_34B,
+        ModelName.CODE_LLAMA_7B_HF,
+        ModelName.CODE_LLAMA_13B_HF,
+        ModelName.CODE_LLAMA_34B_HF,
+        ModelName.CODE_LLAMA_7B_PYTHON_HF,
+        ModelName.CODE_LLAMA_13B_PYTHON_HF,
+        ModelName.CODE_LLAMA_34B_PYTHON_HF,
+    ]
+
+    LOCAL_MODELS = [
+        ModelName.CODE_LLAMA_7B_PYTHON,
+        ModelName.CODE_LLAMA_13B_PYTHON,
+        ModelName.CODE_LLAMA_34B_PYTHON,
     ]
 
     def __init__(
@@ -44,9 +59,21 @@ class HuggingFaceModel(LargeLanguageModel):
         )
 
         if model_name in HuggingFaceModel.META_MODELS:
-            raise NotImplementedError("Meta models are not supported yet.")
+            self.model: LargeLanguageModel = HuggingFaceCodeLlamaModel(
+                model_name,
+                quantization,
+                temperature,
+                stream,
+            )
+        elif model_name in HuggingFaceModel.LOCAL_MODELS:
+            self.model = LocalLlamaModel(
+                model_name,
+                quantization,
+                temperature,
+                stream,
+            )
         elif model_name == ModelName.WIZARD_LM_PYTHON_34B:
-            self.model: LargeLanguageModel = HuggingFaceWizardModel(
+            self.model = HuggingFaceWizardModel(
                 model_name,
                 quantization,
                 temperature,
@@ -62,6 +89,12 @@ class HuggingFaceModel(LargeLanguageModel):
                 temperature,
                 stream,
             )
+        else:
+            raise ValueError(f"Model {model_name} not supported.")
+
+        # need to reset the prompt mode to the actual model used
+        # there is two layer of models (one is this current wrapper file, and the other actual model)
+        self.prompt_mode = self.model.prompt_mode
 
     def get_completion(self, prompt: str) -> str:
         """Get a completion from the OpenAI API based on the provided messages."""

@@ -1,12 +1,7 @@
 import logging
 
 import torch
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    GenerationConfig,
-    __version__,
-)
+from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
 
 from zero_shot_replication.core.utils import quantization_to_kwargs
 from zero_shot_replication.model.base import (
@@ -27,7 +22,6 @@ class HuggingFaceWizardModel(LargeLanguageModel):
     TOP_K = 40
     TOP_P = 0.9
     NUM_BEAMS = 1
-    TRANSFORMERS_VERSION = "4.32.0"
     VERSION = "0.1.0"
 
     def __init__(
@@ -38,12 +32,9 @@ class HuggingFaceWizardModel(LargeLanguageModel):
         stream: bool,
         max_new_tokens=None,
     ) -> None:
-        if HuggingFaceWizardModel.TRANSFORMERS_VERSION != __version__:
-            raise ValueError(
-                f"Transformers version is not correct, {HuggingFaceWizardModel.TRANSFORMERS_VERSION} was expected, but {__version__} was found."
-            )
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         logger.info(f"Selecting device = {self.device}")
+
         super().__init__(
             model_name,
             quantization,
@@ -51,31 +42,54 @@ class HuggingFaceWizardModel(LargeLanguageModel):
             stream,
             prompt_mode=PromptMode.HUMAN_FEEDBACK,
         )
+        # If using the default quantization, use VLLM to match WizardCoder eval
+        self.default_mode = quantization == Quantization.float16
         self.max_new_tokens = (
             max_new_tokens or HuggingFaceWizardModel.MAX_NEW_TOKENS
         )
 
-        # TODO - Add support for 4-bit
+        if self.default_mode:
+            try:
+                from vllm import LLM, SamplingParams
+            except ImportError as e:
+                raise ValueError(
+                    "Project must be installed with optional package vllm to run WizardCoder."
+                ) from e
 
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            model_name.value,
-            # device_map="auto",
-            # **quantization_to_kwargs(quantization),
-        )
+            # TODO - Introduce multi-gpu support
+            self.model = LLM(model=model_name.value, tensor_parallel_size=1)
+            self.sampling_params = SamplingParams(
+                temperature=temperature,
+                top_p=1,
+                max_tokens=self.max_new_tokens,
+            )
+        else:
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                model_name.value,
+            )
+            self.model = AutoModelForCausalLM.from_pretrained(
+                model_name.value,
+                device_map="auto",
+                **quantization_to_kwargs(quantization),
+            )
+            self.model.config.pad_token_id = self.tokenizer.pad_token_id
 
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_name.value,
-            device_map="auto",
-            **quantization_to_kwargs(quantization),
-        )
         self.temperature = temperature
 
     def get_completion(self, prompt: str) -> str:
         """Generate the completion from the Wizard model."""
+        if not self.default_mode:
+            return self._get_default_completion(prompt)
+        with torch.no_grad():
+            completions = self.model.generate([prompt], self.sampling_params)
+        gen_seq = completions[0].outputs[0].text
+        return gen_seq.split(prompt)[-1]
+
+    # TODO Rename this here and in `get_completion`
+    def _get_default_completion(self, prompt: str) -> str:
         inputs = self.tokenizer(
             prompt, return_tensors="pt", truncation=True, padding=True
         ).to(self.device)
-        self.model.config.pad_token_id = self.tokenizer.pad_token_id
 
         generation_config = GenerationConfig(
             temperature=self.temperature,

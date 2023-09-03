@@ -78,6 +78,12 @@ def parse_arguments() -> argparse.Namespace:
         help="What quantization to run the model with?",
     )
     parser.add_argument(
+        "--version",
+        type=str,
+        default="0.1.0",
+        help="What quantization to run the model with?",
+    )
+    parser.add_argument(
         "--temperature",
         type=float,
         default=0.7,

@@ -21,8 +21,10 @@ from zero_shot_replication.model import ModelName, Quantization
 
 class ProviderManager:
     AUTOMATA_MODELS = [
-        model for model in MODEL_SETS[ProviderName.OPENAI]
-        if model not in [ModelName.GPT_3p5_TURBO_0301, ModelName.GPT_3p5_TURBO_0613]
+        model
+        for model in MODEL_SETS[ProviderName.OPENAI]
+        if model
+        not in [ModelName.GPT_3p5_TURBO_0301, ModelName.GPT_3p5_TURBO_0613]
     ]
 
     PROVIDERS = [
@@ -65,6 +67,8 @@ class ProviderManager:
                     f"Model '{model_name}' not supported by provider '{provider_name}'."
                 )
             elif provider.name == provider_name:
-                return provider.llm_class(model_name, *args, **kwargs)
+                return provider.llm_class(
+                    model_name, quantization, *args, **kwargs
+                )
 
         raise ValueError(f"Provider '{provider_name}' not supported.")

@@ -36,9 +36,17 @@ class ModelName(Enum):
     LLAMA_2_7B_HF = "meta-llama/Llama-2-7b-hf"
     LLAMA_2_13B_HF = "meta-llama/Llama-2-13b-hf"
     LLAMA_2_70B_HF = "meta-llama/Llama-2-70b-hf"
-    CODE_LLAMA_7B = "CodeLlama-7b-Python"
-    CODE_LLAMA_13B = "CodeLlama-13b-Python"
-    CODE_LLAMA_34B = "CodeLlama-34b-Python"
+    CODE_LLAMA_7B_HF = "codellama/CodeLlama-7b-hf"
+    CODE_LLAMA_13B_HF = "codellama/CodeLlama-13b-hf"
+    CODE_LLAMA_34B_HF = "codellama/CodeLlama-34b-hf"
+    CODE_LLAMA_7B_PYTHON_HF = "codellama/CodeLlama-7b-Python-hf"
+    CODE_LLAMA_13B_PYTHON_HF = "codellama/CodeLlama-13b-Python-hf"
+    CODE_LLAMA_34B_PYTHON_HF = "codellama/CodeLlama-34b-Python-hf"
+
+    # Meta Open Source Models local (weights need to be downloaded)
+    CODE_LLAMA_7B_PYTHON = "CodeLlama-7b-Python"
+    CODE_LLAMA_13B_PYTHON = "CodeLlama-13b-Python"
+    CODE_LLAMA_34B_PYTHON = "CodeLlama-34b-Python"
 
     # Other HF Open Source Models
     WIZARD_LM_PYTHON_34B = "WizardLM/WizardCoder-Python-34B-V1.0"

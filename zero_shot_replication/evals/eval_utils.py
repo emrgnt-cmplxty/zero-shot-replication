@@ -49,6 +49,15 @@ def get_input_path(args: argparse.Namespace) -> str:
     if not os.path.exists(input_dir):
         os.makedirs(input_dir)
 
-    filename = args.input_file_name or construct_filename(args)
-
-    return os.path.join(input_dir, filename)
+    return os.path.join(
+        input_dir,
+        args.input_file_name
+        or OUTPUT_FILE_NAME.format(
+            PROVIDER=prep_for_file_path(args.provider),
+            pset=prep_for_file_path(args.pset),
+            MODEL=prep_for_file_path(args.model),
+            TEMPERATURE=prep_for_file_path(str(args.temperature)),
+            QUANTIZATION=prep_for_file_path(str(args.quantization)),
+            VERSION=prep_for_file_path(args.version),
+        ),
+    )
