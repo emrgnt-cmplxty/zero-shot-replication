@@ -49,15 +49,16 @@ def get_input_path(args: argparse.Namespace) -> str:
     if not os.path.exists(input_dir):
         os.makedirs(input_dir)
 
-    return os.path.join(
-        input_dir,
-        args.input_file_name
-        or OUTPUT_FILE_NAME.format(
-            PROVIDER=prep_for_file_path(args.provider),
-            pset=prep_for_file_path(args.pset),
-            MODEL=prep_for_file_path(args.model),
-            TEMPERATURE=prep_for_file_path(str(args.temperature)),
-            QUANTIZATION=prep_for_file_path(str(args.quantization)),
-            VERSION=prep_for_file_path(args.version),
-        ),
+    file_name = OUTPUT_FILE_NAME.format(
+        PROVIDER=prep_for_file_path(args.provider),
+        pset=prep_for_file_path(args.pset),
+        MODEL=prep_for_file_path(args.model),
+        TEMPERATURE=prep_for_file_path(str(args.temperature)),
+        QUANTIZATION=prep_for_file_path(str(args.quantization)),
+        VERSION=prep_for_file_path(args.version),
     )
+
+    if args.py_interpreter:
+        file_name = file_name.rstrip(".jsonl") + "_py-interpreter.jsonl"
+
+    return os.path.join(input_dir, args.input_file_name or file_name)
