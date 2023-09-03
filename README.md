@@ -2,9 +2,17 @@
 
 ## Overview
 
-The Zero-Shot Replication Framework is a minimal environment designed to replicate zero-shot results from past academic papers. It currently supports OpenAI, Anthropic, and HuggingFace models to generate completions for various datasets and provides tools for handling, evaluating, and storing these completions.
+The Zero-Shot Replication Framework is a tool designed to replicate zero-shot results from recent academic papers or model reports. Additionally, it aims to extend evaluations to better understand the strengths and weaknesses of various approaches. The framework currently supports OpenAI, Anthropic, and HuggingFace models.
 
-## Results (all models accessed on 08/24-9/1, 2023)
+## Features
+
+- Simple model and parameter configuration.
+- Choice of datasets for evaluation.
+- Extensibility through a modular provider / model / dataset setup.
+
+## pass@1 results (all proprietary models accessed on 08/24-08/25, 2023)
+
+To better understand these results, please check the notes below
 
 ### Proprietary Models
 
@@ -25,20 +33,19 @@ The Zero-Shot Replication Framework is a minimal environment designed to replica
 
 ### OpenSource Models (vs latest GPT-4)
 
-| Category             | wizard-coder-34b | phind-v2  | gpt-4-0613|
-|----------------------|------------------|-----------|------------|
-| *Standard Bench*     |                  |           |            |
-| HumanEval            | 70.7             | 76.2      | 84.1       |
-| HumanEval+           | 60.3             | 72.0      | 74.4       |
-| MATH                 | N/A              | N/A       | 50.3       |
-| **LeetCodeSparks**   |                  |           |            |
-| Easy                 | 38.1             | 52.6      | 61.2       |
-| Medium               | 12.2             | 7.3       | 31.7       |
-| Hard                 | 0.0              | 0.0       | 13.6       |
-| **LeetCode100**      |                  |           |            |
-| Easy                 | 71.0             | 63.0      | 88.0       |
-| Medium               | 9.0              | 5.0       | 21.0       |
-| Hard                 | 2.0              | 3.0       | 6.0        |
+| Category             | code-llama-34b | wizard-coder-34b | phind-v2-34b |
+|----------------------|----------------|------------------|--------------|
+| *Standard Bench*     |                |                  |              |
+| HumanEval            | 56.7           | 69.5             | 75.0         |
+| HumanEval+           | 48.2           | 60.3             | 70.1         |
+| **LeetCodeSparks**   |                |                  |              |
+| Easy                 | 33.3           | 42.9             | 52.4         |
+| Medium               | 2.4            | 12.2             | 7.3          |
+| Hard                 | 0.0            | 0.0              | 0.0          |
+| **LeetCode100**      |                |                  |              |
+| Easy                 | 53.0           | 68.0             | 63.0         |
+| Medium               | 3.0            | 9.0              | 5.0          |
+| Hard                 | 0.0            | 0.0              | 3.0          |
 
 ### Automata Agent (vs latest GPT-4)
 
@@ -56,71 +63,55 @@ The Zero-Shot Replication Framework is a minimal environment designed to replica
 | Medium               | 22.5             | 33.0                         | 21.0      |
 | Hard                 | 4.1              | 9.0                          | 6.0       |
 
-**The gpt-4 LeetCodeSparks baseline is approximate, as we do not see a precise list of LeetCode problems listed in the referenced reports. We define 'LeetCodeSparks' as the 84 problems used for the human evaluation measurement mentioned in [2]*
+### Notes on Results
 
-'LeetCode_100' is an expected out-of-sample dataset we introduce of 100 recent easy, medium, and hard LeetCode problems. The problems live in the range 2554-2818.
+- Our modified prompting for HumanEval may differ from other benchmarks.
+- The GPT-4 LeetCodeSparks baseline is approximate. We don't have a precise list of LeetCode problems from the referenced reports.
+- We define 'LeetCodeSparks' as the 84 problems used for the human evaluation measurement mentioned in [2].
+- 'LeetCode_100' is our out-of-sample dataset, introducing 100 recent easy, medium, and hard LeetCode problems ranging from 2554-2818.
 
-## Features
+## Installation
 
-- Easy configuration of models and parameters.
-- Ability to choose datasets to run on.
-- Extensibility through a pluggable problem generator.
+```bash
+# Repository setup
+git clone https://github.com/your-username/zero-shot-replication.git
+cd zero-shot-replication
+git submodule update --init --recursive
+# Install dependencies
+poetry install
+```
+
+### Optional Dependencies
+
+- `vllm_support`: For VLLM functionalities, required for `WizardCoder` model.
+- `automata`: For `automata` agent evaluations.
+- `python-leetcode`: For `leetcode` evaluations.
+- `evalplus`: For `HumanEval` and `HumanEval+` evaluations.
+- `quantized_support`: For running 4 or 8 bit models.
+
+### Possible Weirdness
+
+I sometimes see that setting `torch==2.0.1` results in issues with the cuda environment initialization on my remote machine. One workaround was to first install `torch=2.0.0`, which requires commenting out of vllm, and to then increment the torch version and uncoment vllm. This may solve some user issues.
+
+---
 
 ## Requirements
 
 - Python >= 3.11 and < 3.12
 - Poetry for package management
 
-## Min. Dependencies
+### Optional Feature Requirements
 
-- anthropic: "^0.3.10"
-- astunparse: "1.6.3"
-- black: "^23.3.0"
-- evalplus: "^0.1.6"
-- numpy: "^1.25.2"
-- openai: "0.27.8"
-- pandas: "^2.0.3"
-- python-dotenv: "^1.0.0"
-- python-leetcode: "1.2.1"
-- transformers: "4.32.1"
-- torch: "2.0.1"
-- accelerate: "^0.22.0"
-- sentencepiece: "^0.1.99"
-- protobuf: "~4.23.4"
-
-## Extra Dependencies
-
-- automata (from a specific branch: feature/automata-slim on GitHub, manual setup required)
-- transformers (optional from main branch of GitHub: https://github.com/huggingface/transformers.git, manual setup required)
-
-## Dev Dependencies
-
-- flake8: "6.1.0"
-- isort: "5.12.0"
-- mypy: "^1.5.1"
-- pre-commit: "^3.3.3"
-- sourcery: "^1.6.0"
-- types-requests: "^2.31.0.2"
-- types-attrs: "^19.1.0"
-- yapf: "0.40.1"
-
-## Installation
-
-Make sure you have [Poetry](https://python-poetry.org/) installed, then clone the repository and install the dependencies.
+For additional features, you can install the optional dependencies:
 
 ```bash
-git clone https://github.com/your-username/zero-shot-replication.git
-cd zero-shot-replication
-git submodule update --init --recursive
-poetry install # to install automata, poetry install -E automata
-cp .env.example .env # Copy the example environment file
-# Edit the .env file to add your OpenAI API key, etc.
-
-# Optional
-
-# If developing, install the pre-commit hooks
-# pre-commit install 
+poetry install -E <extra_name>
 ```
+
+- **WizardCode Model Gen.**: `vllm_support`
+- **Phind Model Gen.**: `transformers must be installed from git (currently by hand)`
+- **Automata Agent Gen.**: `automata`
+- **Leetcode Evaluation**: `python-leetcode`
 
 ## Usage
 

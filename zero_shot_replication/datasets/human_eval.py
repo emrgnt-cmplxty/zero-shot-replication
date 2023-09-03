@@ -58,6 +58,6 @@ class HumanEvalDataset(BaseDataset):
             case PromptMode.HUMAN_FEEDBACK:
                 return self.raw_prompt.format(CODE_PROMPT=problem["prompt"])
             case PromptMode.COMPLETION:
-                return self.raw_prompt.format(CODE_PROMPT=problem["prompt"])
+                return problem["prompt"]
             case _:
                 raise ValueError("Invalid prompt mode.")
