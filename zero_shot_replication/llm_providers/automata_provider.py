@@ -75,12 +75,16 @@ class AutomataZeroShotProvider(LargeLanguageModelProvider):
         """
     )
 
+    PY_INTERPRETER_INSTRUCTION = "\nBefore returning a result, use the py-interpreter tool to run the code. You need to run tests over the code to ensure the correctness of your solution. Use the examples in each problem to write tests and adjust the code you wrote as needed, making sure that edge cases are thoroughly tested and pass, and that your solution is robust."
+
     def __init__(
         self,
         model_name: ModelName = ModelName.GPT_4,
         quantization: Quantization = Quantization.proprietary,
         temperature: float = 0.7,
         stream: bool = True,
+        system_instruction: str = ADVANCED_SYSTEM_PROMPT,
+        py_interpreter: bool = False,
     ) -> None:
         if quantization != Quantization.proprietary:
             raise ValueError(
@@ -94,19 +98,32 @@ class AutomataZeroShotProvider(LargeLanguageModelProvider):
             ) from e
 
         from automata.config import OpenAIAutomataAgentConfig
+        from automata.tools.builders.py_interpreter import PyInterpreter
         from automata.tools.builders import (  # WolframAlphaOpenAIToolkitBuilder,
             PyInterpreterOpenAIToolkitBuilder,
         )
 
-        # TODO - Set upstream flags to allow downstream tools.
-        # PyInterpreterOpenAIToolkitBuilder().build_for_open_ai(),
+        self.py_interpreter = py_interpreter
+
+        tools = []
+
+        if py_interpreter:
+            self.interpreter = PyInterpreter()
+            toolkit_builder = PyInterpreterOpenAIToolkitBuilder()
+            built_tools = toolkit_builder.build_for_open_ai()
+            tools.extend(built_tools)
+            system_instruction += (
+                AutomataZeroShotProvider.PY_INTERPRETER_INSTRUCTION
+            )
+        else:
+            self.interpreter = None
 
         self.agent_config = OpenAIAutomataAgentConfig(
             model=model_name.value,
             temperature=temperature,
             stream=stream,
-            tools=[],
-            system_instruction=AutomataZeroShotProvider.ADVANCED_SYSTEM_PROMPT,
+            tools=tools,
+            system_instruction=system_instruction,
         )
         self._model = OpenAIModel(
             model_name, quantization, temperature, stream

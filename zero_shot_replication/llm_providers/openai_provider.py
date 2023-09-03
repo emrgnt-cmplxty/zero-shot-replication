@@ -23,7 +23,10 @@ class OpenAIZeroShotProvider(LargeLanguageModelProvider):
             )
 
         self._model = OpenAIModel(
-            model_name, quantization, temperature, stream
+            model_name,
+            quantization,
+            temperature,
+            stream,
         )
 
     def get_completion(self, prompt: str) -> str:

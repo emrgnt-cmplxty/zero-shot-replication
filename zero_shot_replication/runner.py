@@ -33,18 +33,22 @@ def get_output_path(args: argparse.Namespace, version: str) -> str:
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    return os.path.join(
-        output_dir,
-        args.output_file_name
-        or OUTPUT_FILE_NAME.format(
-            PROVIDER=prep_for_file_path(args.provider),
-            pset=prep_for_file_path(args.pset),
-            MODEL=prep_for_file_path(args.model),
-            TEMPERATURE=prep_for_file_path(str(args.temperature)),
-            QUANTIZATION=prep_for_file_path(str(args.quantization)),
-            VERSION=prep_for_file_path(version),
-        ),
+    py_interpreter_segment = "_py-interpreter" if args.py_interpreter else ""
+
+    base_file_name = OUTPUT_FILE_NAME.format(
+        PROVIDER=prep_for_file_path(args.provider),
+        pset=prep_for_file_path(args.pset),
+        MODEL=prep_for_file_path(args.model),
+        TEMPERATURE=prep_for_file_path(str(args.temperature)),
+        QUANTIZATION=prep_for_file_path(str(args.quantization)),
+        VERSION=prep_for_file_path(version),
     )
+
+    output_file_name = (
+        base_file_name.rstrip(".jsonl") + py_interpreter_segment + ".jsonl"
+    )
+
+    return os.path.join(output_dir, args.output_file_name or output_file_name)
 
 
 if __name__ == "__main__":
@@ -69,6 +73,7 @@ if __name__ == "__main__":
         quantization,
         temperature=args.temperature,
         stream=args.stream,
+        py_interpreter=args.py_interpreter,
     )
     # What mode should the prompt be in?
     prompt_mode = llm_provider.model.prompt_mode

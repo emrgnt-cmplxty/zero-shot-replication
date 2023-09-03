@@ -176,8 +176,7 @@ def parse_results(results: list[dict], pset: str) -> dict:
     difficulty_map = {1: "easy", 2: "medium", 3: "hard"}
 
     for result in results:
-        difficulty_key = difficulty_map.get(result["difficulty"])
-        if difficulty_key:
+        if difficulty_key := difficulty_map.get(result["difficulty"]):
             parsed_results[difficulty_key].append(result["reward"])
 
     return parsed_results
