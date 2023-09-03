@@ -50,6 +50,7 @@ To better understand these results, please check the notes below
 ### Automata Agent (vs latest GPT-4)
 
 | Category             | Automata-Vanilla | Automata with Py-Interpreter | gpt-4-0613|
+|----------------------|------------------|------------------------------|-----------|
 | *Standard Bench*     |                  |                              |           |
 | HumanEval            | Pend.            | Pend.                        | 84.1      |
 | HumanEval+           | Pend.            | Pend.                        | 74.4      |
