@@ -110,11 +110,12 @@ def parse_arguments() -> argparse.Namespace:
         default=None,
         help="Path to the solutions file to analyze",
     )
+    parser.add_argument("--version", default="0.1.0", help="Model version.")
     parser.add_argument(
-        "--version",
-        default="0.1.0",
-        help="Model version."
-        )
+        "--py_interpreter",
+        default=False,
+        help="Python interpreter for the Automata provider.",
+    )
 
     return parser.parse_args()
 

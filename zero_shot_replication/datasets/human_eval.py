@@ -56,9 +56,7 @@ class HumanEvalDataset(BaseDataset):
         """Concrete method to get the formatted prompt for HumanEval problems."""
         match prompt_mode:
             case PromptMode.HUMAN_FEEDBACK:
-                return self.raw_prompt.format(
-                    CODE_PROMPT=problem["prompt"]
-                )
+                return self.raw_prompt.format(CODE_PROMPT=problem["prompt"])
             case PromptMode.COMPLETION:
                 return self.raw_prompt.format(CODE_PROMPT=problem["prompt"])
             case _:

@@ -19,6 +19,23 @@ def read_existing_results(out_path: str) -> list[dict]:
     )
 
 
+def construct_filename(args: argparse.Namespace) -> str:
+    """Construct the filename based on the given arguments."""
+    filename = OUTPUT_FILE_NAME.format(
+        PROVIDER=prep_for_file_path(args.provider),
+        pset=prep_for_file_path(args.pset),
+        MODEL=prep_for_file_path(args.model),
+        TEMPERATURE=prep_for_file_path(str(args.temperature)),
+        QUANTIZATION=prep_for_file_path(str(args.quantization)),
+        VERSION=prep_for_file_path(str(args.version)),
+    )
+
+    if args.py_interpreter:
+        filename = filename.rstrip(".jsonl") + "_py-interpreter.jsonl"
+
+    return filename
+
+
 def get_input_path(args: argparse.Namespace) -> str:
     """Get the input path for the given arguments."""
     input_dir = os.path.join(
@@ -32,15 +49,6 @@ def get_input_path(args: argparse.Namespace) -> str:
     if not os.path.exists(input_dir):
         os.makedirs(input_dir)
 
-    return os.path.join(
-        input_dir,
-        args.input_file_name
-        or OUTPUT_FILE_NAME.format(
-            PROVIDER=prep_for_file_path(args.provider),
-            pset=prep_for_file_path(args.pset),
-            MODEL=prep_for_file_path(args.model),
-            TEMPERATURE=prep_for_file_path(str(args.temperature)),
-            QUANTIZATION=prep_for_file_path(str(args.quantization)),
-            VERSION=prep_for_file_path(str(args.version)),
-        ),
-    )
+    filename = args.input_file_name or construct_filename(args)
+
+    return os.path.join(input_dir, filename)
