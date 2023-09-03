@@ -81,7 +81,7 @@ def parse_arguments() -> argparse.Namespace:
         "--version",
         type=str,
         default="0.1.0",
-        help="What quantization to run the model with?",
+        help="Version of the run.",
     )
     parser.add_argument(
         "--temperature",
@@ -116,7 +116,6 @@ def parse_arguments() -> argparse.Namespace:
         default=None,
         help="Path to the solutions file to analyze",
     )
-    parser.add_argument("--version", default="0.1.0", help="Model version.")
     parser.add_argument(
         "--py_interpreter",
         default=False,
