@@ -81,7 +81,7 @@ def parse_arguments() -> argparse.Namespace:
         "--version",
         type=str,
         default="0.1.0",
-        help="What quantization to run the model with?",
+        help="Version of the run.",
     )
     parser.add_argument(
         "--temperature",
@@ -115,6 +115,11 @@ def parse_arguments() -> argparse.Namespace:
         "--solutions_file_path",
         default=None,
         help="Path to the solutions file to analyze",
+    )
+    parser.add_argument(
+        "--py_interpreter",
+        default=False,
+        help="Python interpreter for the Automata provider.",
     )
 
     return parser.parse_args()
