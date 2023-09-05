@@ -47,22 +47,6 @@ To better understand these results, please check the notes below
 | Medium               | 3.0            | 9.0              | 5.0          |
 | Hard                 | 0.0            | 0.0              | 3.0          |
 
-### Automata Agent (vs latest GPT-4)
-
-| Category             | Automata-Vanilla | Automata with Py-Interpreter | gpt-4-0613|
-|----------------------|------------------|------------------------------|-----------|
-| *Standard Bench*     |                  |                              |           |
-| HumanEval            | Pend.            | Pend.                        | 84.1      |
-| HumanEval+           | Pend.            | Pend.                        | 74.4      |
-| MATH                 |                  |                              | 50.3      |
-| **LeetCodeSparks**   |                  |                              |           |
-| Easy                 | Pend.            | Pend.                        | 61.2      |
-| Medium               | Pend.            | Pend.                        | 31.7      |
-| Hard                 | Pend.            | Pend.                        | 13.6      |
-| **LeetCode100**      |                  |                              |           |
-| Easy                 | 68.8             | 89.0                         | 88.0      |
-| Medium               | 22.5             | 33.0                         | 21.0      |
-| Hard                 | 4.1              | 9.0                          | 6.0       |
 
 ### Notes on Results
 
